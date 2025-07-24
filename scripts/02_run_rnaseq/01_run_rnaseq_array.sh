@@ -57,9 +57,10 @@ echo "Run ID: $RUN_ID"
 echo "FASTQ1: $FASTQ1"
 echo "FASTQ2: $FASTQ2"
 
-# Create a temporary samplesheet with just this sample
-echo "sample,fastq_1,fastq_2,strandedness" > samplesheet_${SLURM_ARRAY_TASK_ID}.csv
-echo "$SAMPLE_LINE" >> samplesheet_${SLURM_ARRAY_TASK_ID}.csv
+# Create a temporary samplesheet with just this sample in output directory
+mkdir -p output/temp_samplesheets
+echo "sample,fastq_1,fastq_2,strandedness" > output/temp_samplesheets/samplesheet_${SLURM_ARRAY_TASK_ID}.csv
+echo "$SAMPLE_LINE" >> output/temp_samplesheets/samplesheet_${SLURM_ARRAY_TASK_ID}.csv
 
 # Check if FASTQ files exist
 if [ ! -f "$FASTQ1" ]; then
@@ -93,7 +94,7 @@ mkdir -p output/${PROJECT}
 nextflow run nf-core/rnaseq \
     -profile singularity \
     -c scripts/02_run_rnaseq/hpc_batch.conf \
-    --input samplesheet_${SLURM_ARRAY_TASK_ID}.csv \
+    --input output/temp_samplesheets/samplesheet_${SLURM_ARRAY_TASK_ID}.csv \
     --outdir output/${PROJECT}/${SAMPLE_ID} \
     --fasta "$FASTA" \
     --gtf "$GTF" \
@@ -125,11 +126,11 @@ if [ $? -eq 0 ] && [ -d "output/${PROJECT}/${SAMPLE_ID}" ]; then
     mkdir -p ${PROJECT_BASE}/logs/samplesheets
     
     # Move the samplesheet to logs directory with timestamp
-    mv samplesheet_${SLURM_ARRAY_TASK_ID}.csv ${PROJECT_BASE}/logs/samplesheets/${SAMPLE_ID}_${RUN_ID}.csv
+    mv output/temp_samplesheets/samplesheet_${SLURM_ARRAY_TASK_ID}.csv ${PROJECT_BASE}/logs/samplesheets/${SAMPLE_ID}_${RUN_ID}.csv
 else
     echo "Pipeline failed or output directory not found. Check the logs for details."
     # Move the samplesheet to logs directory even if pipeline fails
     mkdir -p ${PROJECT_BASE}/logs/samplesheets
-    mv samplesheet_${SLURM_ARRAY_TASK_ID}.csv ${PROJECT_BASE}/logs/samplesheets/${SAMPLE_ID}_${RUN_ID}_FAILED.csv
+    mv output/temp_samplesheets/samplesheet_${SLURM_ARRAY_TASK_ID}.csv ${PROJECT_BASE}/logs/samplesheets/${SAMPLE_ID}_${RUN_ID}_FAILED.csv
     exit 1
 fi
