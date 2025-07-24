@@ -1,0 +1,86 @@
+{
+  "name": "RNA-seq Diapause Analysis",
+  "image": "diapause-rnaseq:latest",
+ // "dockerComposeFile": "../docker-compose.yml",
+ // "service": "rnaseq-analysis",
+  "workspaceFolder": "/proj",
+  "shutdownAction": "stopCompose",
+  
+  // Features to install in the container
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": false,
+      "configureZshAsDefaultShell": true,
+      "installOhMyZsh": false,
+      "upgradePackages": true,
+      "username": "root"
+    }
+  },
+
+  // Configure tool-specific properties
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "zsh": {
+            "path": "/bin/zsh",
+            "args": ["-l"]
+          }
+        },
+        "python.defaultInterpreterPath": "/opt/conda/bin/python",
+        "r.rterm.linux": "/opt/conda/bin/R",
+        "r.rpath.linux": "/opt/conda/bin/R",
+        "r.rterm.option": ["--no-save", "--no-restore", "--quiet"],
+        "files.associations": {
+          "*.R": "r",
+          "*.Rmd": "rmd"
+        },
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true
+      },
+      
+      // Extensions to install automatically
+      "extensions": [
+        "ms-python.python",
+        "ms-python.flake8",
+        "ms-python.black-formatter",
+        "ms-toolsai.jupyter",
+        "reditorsupport.r",
+        "rdebugger.r-debugger", 
+        "ms-vscode.cmake-tools",
+        "yzhang.markdown-all-in-one",
+        "shd101wyy.markdown-preview-enhanced",
+        "mechatroner.rainbow-csv",
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+        "github.copilot",
+        "ms-vscode-remote.remote-containers"
+      ]
+    }
+  },
+
+  // Port forwarding for Jupyter and other services
+  "forwardPorts": [8888, 8787],
+  "portsAttributes": {
+    "8888": {
+      "label": "Jupyter Lab",
+      "protocol": "http"
+    },
+    "8787": {
+      "label": "RStudio Server",
+      "protocol": "http"
+    }
+  },
+
+  // Commands to run after container creation
+  "postCreateCommand": "zsh -c 'source ~/.zshrc && ./setup.sh'",
+
+  // Mount the Docker socket for docker-in-docker if needed
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  ],
+
+  // User to run as (root for conda environments)
+  "remoteUser": "root"
+}

@@ -1,0 +1,18 @@
+accession,dataset,condition,life_stage,description,fastq_files,sequencing_type,phenotype,photoperiod,temperature,humidity,time_point
+PRJNA187045,D_11d,Pharate_larvae,Ae. albopictus D 11d pharate larvae, rep 1b,SRR652072_1.fastq.gz;SRR652072_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,21°C,80%,larvae
+PRJNA187045,D_11d,Pharate_larvae,Ae. albopictus D 11d pharate larvae, rep 4,SRR652088_1.fastq.gz;SRR652088_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,21°C,80%,larvae
+PRJNA187045,D_11d,Pharate_larvae,Ae. albopictus D 11d pharate larvae, rep 2,SRR652090_1.fastq.gz;SRR652090_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,21°C,80%,larvae
+PRJNA187045,D_21d,Pharate_larvae,Ae. albopictus D 21d pharate larvae, rep 1,SRR652091_1.fastq.gz;SRR652091_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,21°C,80%,larvae
+PRJNA187045,D_21d,Pharate_larvae,Ae. albopictus D 21d pharate larvae, rep 2,SRR652092_1.fastq.gz;SRR652092_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,21°C,80%,larvae
+PRJNA187045,D_21d,Pharate_larvae,Ae. albopictus D 21d pharate larvae, rep 4,SRR652097_1.fastq.gz;SRR652097_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,21°C,80%,larvae
+PRJNA187045,D_40d,Pharate_larvae,Ae. albopictus D 40d pharate larvae, rep 2,SRR652098_1.fastq.gz;SRR652098_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,21°C,80%,larvae
+PRJNA187045,D_40d,Pharate_larvae,Ae. albopictus D 40d pharate larvae, rep 3,SRR652099_1.fastq.gz;SRR652099_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,21°C,80%,larvae
+PRJNA187045,D_40d,Pharate_larvae,Ae. albopictus D 40d pharate larvae, rep 4,SRR652100_1.fastq.gz;SRR652100_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,21°C,80%,larvae
+PRJNA187045,ND_11d,Pharate_larvae,Ae. albopictus ND 11d pharate larvae, rep 1,SRR652101_1.fastq.gz;SRR652101_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,21°C,80%,larvae
+PRJNA187045,ND_11d,Pharate_larvae,Ae. albopictus ND 11d pharate larvae, rep 2,SRR652102_1.fastq.gz;SRR652102_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,21°C,80%,larvae
+PRJNA187045,ND_11d,Pharate_larvae,Ae. albopictus ND 11d pharate larvae, rep 4,SRR652103_1.fastq.gz;SRR652103_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,21°C,80%,larvae
+PRJNA187045,ND_21d,Pharate_larvae,Ae. albopictus ND 21d pharate larvae, rep 1,SRR652116_1.fastq.gz;SRR652116_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,21°C,80%,larvae
+PRJNA187045,ND_21d,Pharate_larvae,Ae. albopictus ND 21d pharate larvae, rep 2,SRR652118_1.fastq.gz;SRR652118_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,21°C,80%,larvae
+PRJNA187045,ND_21d,Pharate_larvae,Ae. albopictus ND 21d pharate larvae, rep 3,SRR652119_1.fastq.gz;SRR652119_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,21°C,80%,larvae
+PRJNA187045,ND_40d,Pharate_larvae,Ae. albopictus ND 40d pharate larvae, rep 3,SRR652120_1.fastq.gz;SRR652120_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,21°C,80%,larvae
+PRJNA187045,ND_40d,Pharate_larvae,Ae. albopictus ND 40d pharate larvae, rep 4,SRR672801_1.fastq.gz;SRR672801_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,21°C,80%,larvae

@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "ms-python.python",
+    "REditorSupport.r",
+    "ms-azuretools.vscode-docker",
+    "ms-vscode.vscode-json",
+    "redhat.vscode-yaml",
+    "ms-toolsai.jupyter",
+    "ms-toolsai.jupyter-keymap",
+    "ms-toolsai.jupyter-renderers"
+  ]
+} 

@@ -1,0 +1,232 @@
+PRJNA268379
+
+1.
+Ae_albo_ld_nb_4
+1 ILLUMINA (Illumina HiSeq 2000) run: 25M spots, 5G bases, 3.1Gb downloads
+Accession: SRX769234
+Select item 1109632
+2.
+Ae_albo_ld_nb_3
+1 ILLUMINA (Illumina HiSeq 2000) run: 20.2M spots, 4.1G bases, 2.5Gb downloads
+Accession: SRX769233
+Select item 1109360
+3.
+Ae_albo_ld_nb_2
+1 ILLUMINA (Illumina HiSeq 2000) run: 27.8M spots, 5.6G bases, 3.4Gb downloads
+Accession: SRX768961
+Select item 1109357
+4.
+Ae_albo_ld_nb_1
+1 ILLUMINA (Illumina HiSeq 2000) run: 36M spots, 7.3G bases, 4.5Gb downloads
+Accession: SRX768958
+Select item 1109319
+5.
+Ae_albo_ld_bm_4
+1 ILLUMINA (Illumina HiSeq 2000) run: 38.8M spots, 7.8G bases, 4.8Gb downloads
+Accession: SRX768920
+Select item 1109262
+6.
+Ae_albo_ld_bm_3
+1 ILLUMINA (Illumina HiSeq 2000) run: 28.7M spots, 5.8G bases, 3.5Gb downloads
+Accession: SRX768863
+Select item 1109214
+7.
+Ae_albo_ld_bm_2
+1 ILLUMINA (Illumina HiSeq 2000) run: 26.1M spots, 5.3G bases, 3.2Gb downloads
+Accession: SRX768815
+Select item 1109180
+8.
+Ae_albo_ld_bm_1
+1 ILLUMINA (Illumina HiSeq 2000) run: 36.9M spots, 7.5G bases, 4.6Gb downloads
+Accession: SRX768781
+Select item 1109168
+9.
+Ae_albo_sd_nb_4
+1 ILLUMINA (Illumina HiSeq 2000) run: 36.5M spots, 7.4G bases, 4.5Gb downloads
+Accession: SRX768769
+Select item 1109166
+10.
+Ae_albo_sd_nb_3
+1 ILLUMINA (Illumina HiSeq 2000) run: 21.1M spots, 4.3G bases, 2.6Gb downloads
+Accession: SRX768767
+Select item 1109165
+11.
+Ae_albo_sd_nb_2
+1 ILLUMINA (Illumina HiSeq 2000) run: 20.3M spots, 4.1G bases, 2.5Gb downloads
+Accession: SRX768766
+Select item 1109164
+12.
+Ae_albo_sd_nb_1
+1 ILLUMINA (Illumina HiSeq 2000) run: 29.3M spots, 5.9G bases, 3.6Gb downloads
+Accession: SRX768765
+Select item 1109163
+13.
+Ae_albo_sd_bm_4
+1 ILLUMINA (Illumina HiSeq 2000) run: 41.9M spots, 8.5G bases, 5.2Gb downloads
+Accession: SRX768764
+Select item 1109156
+14.
+Ae_albo_sd_bm_3
+1 ILLUMINA (Illumina HiSeq 2000) run: 32M spots, 6.5G bases, 3.9Gb downloads
+Accession: SRX768757
+Select item 1109155
+15.
+Ae_albo_sd_bm_2
+1 ILLUMINA (Illumina HiSeq 2000) run: 27.9M spots, 5.6G bases, 3.4Gb downloads
+Accession: SRX768756
+Select item 1108622
+16.
+Ae_albo_sd_bm_1
+1 ILLUMINA (Illumina HiSeq 2000) run: 23.5M spots, 4.7G bases, 2.9Gb downloads
+Accession: SRX768306
+
+SRA051478 
+1.
+Ae. albopictus reared under non-diapause-inducing (NDI) conditions, embryos 135-141h post-oviposition, biological replicate 3
+1 ILLUMINA (Illumina HiSeq 2000) run: 12.5M spots, 2.5G bases, 1.4Gb downloads
+Accession: SRX136941
+Select item 155359
+2.
+Ae. albopictus reared under diapause-inducing (DI) conditions, embryos 135-141h post-oviposition, biological replicate 2
+1 ILLUMINA (Illumina HiSeq 2000) run: 9.8M spots, 2G bases, 1.1Gb downloads
+Accession: SRX136939
+Select item 155356
+3.
+Ae. albopictus reared under non-diapause-inducing (NDI) conditions, embryos 135-141h post-oviposition, biological replicate 1
+1 ILLUMINA (Illumina HiSeq 2000) run: 11.3M spots, 2.3G bases, 1.3Gb downloads
+Accession: SRX136936
+Select item 155354
+4.
+Ae. albopictus reared under non-diapause-inducing (NDI) conditions, embryos 72-78h post-oviposition, biological replicate 3
+1 ILLUMINA (Illumina HiSeq 2000) run: 13.6M spots, 2.7G bases, 1.6Gb downloads
+Accession: SRX136934
+Select item 155353
+5.
+Ae. albopictus reared under diapause-inducing (DI) conditions, embryos 72-78h post-oviposition, biological replicate 2
+1 ILLUMINA (Illumina HiSeq 2000) run: 12.1M spots, 2.4G bases, 1.4Gb downloads
+Accession: SRX136933
+Select item 155352
+6.
+Ae. albopictus reared under non-diapause-inducing (NDI) conditions, embryos 72-78h post-oviposition, biological replicate 1
+1 ILLUMINA (Illumina HiSeq 2000) run: 13.1M spots, 2.6G bases, 1.5Gb downloads
+Accession: SRX136932
+Select item 155351
+7.
+Ae. albopictus reared under diapause-inducing (DI) conditions, embryos 135-141h post-oviposition, biological replicate 3
+1 ILLUMINA (Illumina HiSeq 2000) run: 10.5M spots, 2.1G bases, 1.2Gb downloads
+Accession: SRX136931
+Select item 155349
+8.
+Ae. albopictus reared under non-diapause-inducing (NDI) conditions, embryos 135-141h post-oviposition, biological replicate 2
+1 ILLUMINA (Illumina HiSeq 2000) run: 10M spots, 2G bases, 1.1Gb downloads
+Accession: SRX136929
+Select item 155348
+9.
+Ae. albopictus reared under diapause-inducing (DI) conditions, embryos 135-141h post-oviposition, biological replicate 1
+1 ILLUMINA (Illumina HiSeq 2000) run: 11.9M spots, 2.4G bases, 1.3Gb downloads
+Accession: SRX136928
+Select item 155347
+10.
+Ae. albopictus reared under diapause-inducing (DI) conditions, embryos 72-78h post-oviposition, biological replicate 3
+1 ILLUMINA (Illumina HiSeq 2000) run: 12.6M spots, 2.5G bases, 1.4Gb downloads
+Accession: SRX136927
+Select item 155346
+11.
+Ae. albopictus reared under diapause-inducing (DI) conditions, embryos 72-78h post-oviposition, biological replicate 2
+1 ILLUMINA (Illumina HiSeq 2000) run: 13.2M spots, 2.6G bases, 1.5Gb downloads
+Accession: SRX136926
+Select item 155345
+12.
+Ae. albopictus reared under diapause-inducing (DI) conditions, embryos 72-78h post-oviposition, biological replicate 1
+1 ILLUMINA (Illumina HiSeq 2000) run: 13.5M spots, 2.7G bases, 1.5Gb downloads
+Accession: SRX136925
+
+SRA063587
+
+1.
+Ae. albopictus D 11d pharate larvae, rep 1b
+1 ILLUMINA (Illumina HiSeq 1000) run: 16.8M spots, 3.4G bases, 2Gb downloads
+Accession: SRX219036
+Select item 305600
+2.
+Ae. albopictus ND 40d pharate larvae, rep 4
+1 ILLUMINA (Illumina HiSeq 1000) run: 29.3M spots, 5.9G bases, 3.5Gb downloads
+Accession: SRX219131
+Select item 305599
+3.
+Ae. albopictus ND 40d pharate larvae, rep 3
+1 ILLUMINA (Illumina HiSeq 1000) run: 19.3M spots, 3.9G bases, 2.3Gb downloads
+Accession: SRX219130
+Select item 305598
+4.
+Ae. albopictus ND 21d pharate larvae, rep 3
+1 ILLUMINA (Illumina HiSeq 1000) run: 10M spots, 2G bases, 1.2Gb downloads
+Accession: SRX219129
+Select item 305596
+5.
+Ae. albopictus ND 21d pharate larvae, rep 2
+1 ILLUMINA (Illumina HiSeq 1000) run: 25.8M spots, 5.2G bases, 3.1Gb downloads
+Accession: SRX219127
+Select item 305595
+6.
+Ae. albopictus ND 21d pharate larvae, rep 1
+1 ILLUMINA (Illumina HiSeq 1000) run: 10.1M spots, 2G bases, 1.2Gb downloads
+Accession: SRX219126
+Select item 305518
+7.
+Ae. albopictus ND 11d pharate larvae, rep 2
+1 ILLUMINA (Illumina HiSeq 1000) run: 8.5M spots, 1.7G bases, 1Gb downloads
+Accession: SRX219049
+Select item 305517
+8.
+Ae. albopictus ND 11d pharate larvae, rep 1
+1 ILLUMINA (Illumina HiSeq 1000) run: 23M spots, 4.6G bases, 2.8Gb downloads
+Accession: SRX219048
+Select item 305516
+9.
+Ae. albopictus D 40d pharate larvae, rep 4
+1 ILLUMINA (Illumina HiSeq 1000) run: 32.6M spots, 6.6G bases, 3.9Gb downloads
+Accession: SRX219047
+Select item 305512
+10.
+Ae. albopictus D 40d pharate larvae, rep 3
+1 ILLUMINA (Illumina HiSeq 1000) run: 14.2M spots, 2.9G bases, 1.7Gb downloads
+Accession: SRX219043
+Select item 305511
+11.
+Ae. albopictus D 40d pharate larvae, rep 2
+1 ILLUMINA (Illumina HiSeq 1000) run: 16.3M spots, 3.3G bases, 2Gb downloads
+Accession: SRX219042
+Select item 305510
+12.
+Ae. albopictus D 21d pharate larvae, rep 4
+1 ILLUMINA (Illumina HiSeq 1000) run: 19.8M spots, 4G bases, 2.4Gb downloads
+Accession: SRX219041
+Select item 305509
+13.
+Ae. albopictus D 21d pharate larvae, rep 2
+1 ILLUMINA (Illumina HiSeq 1000) run: 13.8M spots, 2.8G bases, 1.7Gb downloads
+Accession: SRX219040
+Select item 305508
+14.
+Ae. albopictus D 21d pharate larvae, rep 1
+1 ILLUMINA (Illumina HiSeq 1000) run: 30M spots, 6.1G bases, 3.6Gb downloads
+Accession: SRX219039
+Select item 305507
+15.
+Ae. albopictus D 11d pharate larvae, rep 4
+1 ILLUMINA (Illumina HiSeq 1000) run: 20.8M spots, 4.2G bases, 2.5Gb downloads
+Accession: SRX219038
+Select item 305506
+16.
+Ae. albopictus D 11d pharate larvae, rep 2
+1 ILLUMINA (Illumina HiSeq 1000) run: 22.7M spots, 4.6G bases, 2.7Gb downloads
+Accession: SRX219037
+Select item 305592
+17.
+Ae. albopictus ND 11d pharate larvae, rep 4
+1 ILLUMINA (Illumina HiSeq 1000) run: 11.2M spots, 2.3G bases, 1.3Gb downloads
+Accession: SRX219123
+
+
+

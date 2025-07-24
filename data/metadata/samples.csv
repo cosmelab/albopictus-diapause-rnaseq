@@ -1,0 +1,46 @@
+﻿BioProject,Run,Stage exposed,Exposure duration,Photoperiod,Temperature (oC),Sample collection,Replicate,Description,Original publication abbreviation,Condition,Plattaform,Read length,Publication,New abreviation
+PRJNA268379,SRR1664192,Adult,12 days,16L:8D,21,adult females,4,long day without blood meal,LD_NB,non-diapause-inducing,Illumina HiSeq 2000 ,"Paired-end, 100bp","Huang et al, 2015",LD_Unfed
+PRJNA268379,SRR1664190,Adult,12 days,16L:8D,21,adult females,3,long day without blood meal,LD_NB,non-diapause-inducing,Illumina HiSeq 2000 ,"Paired-end, 100bp","Huang et al, 2015",LD_Unfed
+PRJNA268379,SRR1663916,Adult,12 days,16L:8D,21,adult females,2,long day without blood meal,LD_NB,non-diapause-inducing,Illumina HiSeq 2000 ,"Paired-end, 100bp","Huang et al, 2015",LD_Unfed
+PRJNA268379,SRR1663913,Adult,12 days,16L:8D,21,adult females,1,long day without blood meal,LD_NB,non-diapause-inducing,Illumina HiSeq 2000 ,"Paired-end, 100bp","Huang et al, 2015",LD_Unfed
+PRJNA268379,SRR1663911,Adult,12 days,16L:8D,21,adult females,4,long day with blood meal,LD_BM,diapause-inducing,Illumina HiSeq 2000 ,"Paired-end, 100bp","Huang et al, 2015",LD_Fed
+PRJNA268379,SRR1663843,Adult,12 days,16L:8D,21,adult females,3,long day with blood meal,LD_BM,diapause-inducing,Illumina HiSeq 2000 ,"Paired-end, 100bp","Huang et al, 2015",LD_Fed
+PRJNA268379,SRR1663769,Adult,12 days,16L:8D,21,adult females,2,long day with blood meal,LD_BM,diapause-inducing,Illumina HiSeq 2000 ,"Paired-end, 100bp","Huang et al, 2015",LD_Fed
+PRJNA268379,SRR1663754,Adult,12 days,16L:8D,21,adult females,1,long day with blood meal,LD_BM,diapause-inducing,Illumina HiSeq 2000 ,"Paired-end, 100bp","Huang et al, 2015",LD_Fed
+PRJNA268379,SRR1663709,Adult,12 days,8L:16D,21,adult females,4,short day without blood meal,SD_NB,non-diapause-inducing,Illumina HiSeq 2000 ,"Paired-end, 100bp","Huang et al, 2015",SD_Unfed
+PRJNA268379,SRR1663707,Adult,12 days,8L:16D,21,adult females,3,short day without blood meal,SD_NB,non-diapause-inducing,Illumina HiSeq 2000 ,"Paired-end, 100bp","Huang et al, 2015",SD_Unfed
+PRJNA268379,SRR1663703,Adult,12 days,8L:16D,21,adult females,2,short day without blood meal,SD_NB,non-diapause-inducing,Illumina HiSeq 2000 ,"Paired-end, 100bp","Huang et al, 2015",SD_Unfed
+PRJNA268379,SRR1663700,Adult,12 days,8L:16D,21,adult females,1,short day without blood meal,SD_NB,non-diapause-inducing,Illumina HiSeq 2000 ,"Paired-end, 100bp","Huang et al, 2015",SD_Unfed
+PRJNA268379,SRR1663697,Adult,12 days,8L:16D,21,adult females,4,short day with blood meal,SD_BM,diapause-inducing,Illumina HiSeq 2000 ,"Paired-end, 100bp","Huang et al, 2015",SD_Fed
+PRJNA268379,SRR1663689,Adult,12 days,8L:16D,21,adult females,3,short day with blood meal,SD_BM,diapause-inducing,Illumina HiSeq 2000 ,"Paired-end, 100bp","Huang et al, 2015",SD_Fed
+PRJNA268379,SRR1663687,Adult,12 days,8L:16D,21,adult females,2,short day with blood meal,SD_BM,diapause-inducing,Illumina HiSeq 2000 ,"Paired-end, 100bp","Huang et al, 2015",SD_Fed
+PRJNA268379,SRR1663685,Adult,12 days,8L:16D,21,adult females,1,short day with blood meal,SD_BM,diapause-inducing,Illumina HiSeq 2000 ,"Paired-end, 100bp","Huang et al, 2015",SD_Fed
+PRJNA158021,SRR458462,Adult,pupa to egg laying,8L:16D,21,embryos,1, 72-78h post-oviposition,DI_72h,diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",SD_72h
+PRJNA158021,SRR458463,Adult,pupa to egg laying,8L:16D,21,embryos,1, 135-141h post-oviposition,DI_135h,diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",SD_135h
+PRJNA158021,SRR458464,Adult,pupa to egg laying,16L:8D,21,embryos,1, 72-78h post-oviposition,NDI_72h,non-diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",LD_72h
+PRJNA158021,SRR458465,Adult,pupa to egg laying,16L:8D,21,embryos,1, 135-141h post-oviposition,NDI_135h,non-diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",LD_135h
+PRJNA158021,SRR458466,Adult,pupa to egg laying,8L:16D,21,embryos,2, 72-78h post-oviposition,DI_72h,diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",SD_72h
+PRJNA158021,SRR458467,Adult,pupa to egg laying,8L:16D,21,embryos,2, 135-141h post-oviposition,DI_135h,diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",SD_135h
+PRJNA158021,SRR458468,Adult,pupa to egg laying,16L:8D,21,embryos,2, 72-78h post-oviposition,NDI_72h,non-diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",LD_72h
+PRJNA158021,SRR458469,Adult,pupa to egg laying,16L:8D,21,embryos,2, 135-141h post-oviposition,NDI_135h,non-diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",LD_135h
+PRJNA158021,SRR458470,Adult,pupa to egg laying,8L:16D,21,embryos,3, 72-78h post-oviposition,DI_72h,diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",SD_72h
+PRJNA158021,SRR458471,Adult,pupa to egg laying,8L:16D,21,embryos,3, 135-141h post-oviposition,DI_135h,diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",SD_135h
+PRJNA158021,SRR458472,Adult,pupa to egg laying,16L:8D,21,embryos,3, 72-78h post-oviposition,NDI_72h,non-diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",LD_72h
+PRJNA158021,SRR458473,Adult,pupa to egg laying,16L:8D,21,embryos,3, 135-141h post-oviposition,NDI_135h,non-diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",LD_135h
+PRJNA187045,SRR652072,Adult,pupa to egg laying,8L:16D,21,pharate larvae, 1b,DI-11-day post-oviposition,D_11d,diapause-inducing,Illumina GA IIx,"Paired-end, 100bp","Poelchau et al, 2013b",SD_11d
+PRJNA187045,SRR652088,Adult,pupa to egg laying,8L:16D,21,pharate larvae,4,DI-11-day post-oviposition,D_11d,diapause-inducing,Illumina GA IIx,"Paired-end, 100bp","Poelchau et al, 2013b",SD_11d
+PRJNA187045,SRR652090,Adult,pupa to egg laying,8L:16D,21,pharate larvae,2,DI-11-day post-oviposition,D_11d,diapause-inducing,Illumina GA IIx,"Paired-end, 100bp","Poelchau et al, 2013b",SD_11d
+PRJNA187045,SRR652091,Adult,pupa to egg laying,8L:16D,21,pharate larvae,1,DI-21-day post-oviposition,D_21d,diapause-inducing,Illumina GA IIx,"Paired-end, 100bp","Poelchau et al, 2013b",SD_21d
+PRJNA187045,SRR652092,Adult,pupa to egg laying,8L:16D,21,pharate larvae,2,DI-21-day post-oviposition,D_21d,diapause-inducing,Illumina GA IIx,"Paired-end, 100bp","Poelchau et al, 2013b",SD_21d
+PRJNA187045,SRR652097,Adult,pupa to egg laying,8L:16D,21,pharate larvae,4,DI-21-day post-oviposition,D_21d,diapause-inducing,Illumina GA IIx,"Paired-end, 100bp","Poelchau et al, 2013b",SD_21d
+PRJNA187045,SRR652098,Adult,pupa to egg laying,8L:16D,21,pharate larvae,2,DI-40-day post-oviposition,D_40d,diapause-inducing,Illumina GA IIx,"Paired-end, 100bp","Poelchau et al, 2013b",SD_40d
+PRJNA187045,SRR652099,Adult,pupa to egg laying,8L:16D,21,pharate larvae,3,DI-40-day post-oviposition,D_40d,diapause-inducing,Illumina GA IIx,"Paired-end, 100bp","Poelchau et al, 2013b",SD_40d
+PRJNA187045,SRR652100,Adult,pupa to egg laying,8L:16D,21,pharate larvae,4,DI-40-day post-oviposition,D_40d,diapause-inducing,Illumina GA IIx,"Paired-end, 100bp","Poelchau et al, 2013b",SD_40d
+PRJNA187045,SRR652101,Adult,pupa to egg laying,16L:8D,21,pharate larvae,1,ND-11-day post-oviposition,ND_11d,non-diapause-inducing,Illumina GA IIx,"Paired-end, 100bp","Poelchau et al, 2013b",LD_11d
+PRJNA187045,SRR652102,Adult,pupa to egg laying,16L:8D,21,pharate larvae,2,ND-11-day post-oviposition,ND_11d,non-diapause-inducing,Illumina GA IIx,"Paired-end, 100bp","Poelchau et al, 2013b",LD_11d
+PRJNA187045,SRR652103,Adult,pupa to egg laying,16L:8D,21,pharate larvae,4,ND-11-day post-oviposition,ND_11d,non-diapause-inducing,Illumina GA IIx,"Paired-end, 100bp","Poelchau et al, 2013b",LD_11d
+PRJNA187045,SRR652116,Adult,pupa to egg laying,16L:8D,21,pharate larvae,1,ND-21-day post-oviposition,ND_21d,non-diapause-inducing,Illumina GA IIx,"Paired-end, 100bp","Poelchau et al, 2013b",LD_21d
+PRJNA187045,SRR652118,Adult,pupa to egg laying,16L:8D,21,pharate larvae,2,ND-21-day post-oviposition,ND_21d,non-diapause-inducing,Illumina GA IIx,"Paired-end, 100bp","Poelchau et al, 2013b",LD_21d
+PRJNA187045,SRR652119,Adult,pupa to egg laying,16L:8D,21,pharate larvae,3,ND-21-day post-oviposition,ND_21d,non-diapause-inducing,Illumina GA IIx,"Paired-end, 100bp","Poelchau et al, 2013b",LD_21d
+PRJNA187045,SRR652120,Adult,pupa to egg laying,16L:8D,21,pharate larvae,3,ND-40-day post-oviposition,ND_40d,non-diapause-inducing,Illumina GA IIx,"Paired-end, 100bp","Poelchau et al, 2013b",LD_40d
+PRJNA187045,SRR672801,Adult,pupa to egg laying,16L:8D,21,pharate larvae,4,ND-40-day post-oviposition,ND_40d,non-diapause-inducing,Illumina GA IIx,"Paired-end, 100bp","Poelchau et al, 2013b",LD_40d

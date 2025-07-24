@@ -1,0 +1,17 @@
+accession,dataset,condition,life_stage,description,fastq_files,sequencing_type,phenotype,photoperiod,temperature,humidity,time_point
+SRR1664192,PRJNA268379,LD_NB,Adult,Ae_albo_ld_nb_4,SRR1664192_1.fastq.gz;SRR1664192_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,25°C,80%,Adult
+SRR1664190,PRJNA268379,LD_NB,Adult,Ae_albo_ld_nb_3,SRR1664190_1.fastq.gz;SRR1664190_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,25°C,80%,Adult
+SRR1663916,PRJNA268379,LD_NB,Adult,Ae_albo_ld_nb_2,SRR1663916_1.fastq.gz;SRR1663916_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,25°C,80%,Adult
+SRR1663913,PRJNA268379,LD_NB,Adult,Ae_albo_ld_nb_1,SRR1663913_1.fastq.gz;SRR1663913_2.fastq.gz,paired-end,non-diapause-inducing,16L:8D,25°C,80%,Adult
+SRR1663911,PRJNA268379,LD_BM,Adult,Ae_albo_ld_bm_4,SRR1663911_1.fastq.gz;SRR1663911_2.fastq.gz,paired-end,diapause-inducing,16L:8D,25°C,80%,Adult
+SRR1663843,PRJNA268379,LD_BM,Adult,Ae_albo_ld_bm_3,SRR1663843_1.fastq.gz;SRR1663843_2.fastq.gz,paired-end,diapause-inducing,16L:8D,25°C,80%,Adult
+SRR1663769,PRJNA268379,LD_BM,Adult,Ae_albo_ld_bm_2,SRR1663769_1.fastq.gz;SRR1663769_2.fastq.gz,paired-end,diapause-inducing,16L:8D,25°C,80%,Adult
+SRR1663754,PRJNA268379,LD_BM,Adult,Ae_albo_ld_bm_1,SRR1663754_1.fastq.gz;SRR1663754_2.fastq.gz,paired-end,diapause-inducing,16L:8D,25°C,80%,Adult
+SRR1663709,PRJNA268379,SD_NB,Adult,Ae_albo_sd_nb_4,SRR1663709_1.fastq.gz;SRR1663709_2.fastq.gz,paired-end,non-diapause-inducing,8L:16D,25°C,80%,Adult
+SRR1663707,PRJNA268379,SD_NB,Adult,Ae_albo_sd_nb_3,SRR1663707_1.fastq.gz;SRR1663707_2.fastq.gz,paired-end,non-diapause-inducing,8L:16D,25°C,80%,Adult
+SRR1663703,PRJNA268379,SD_NB,Adult,Ae_albo_sd_nb_2,SRR1663703_1.fastq.gz;SRR1663703_2.fastq.gz,paired-end,non-diapause-inducing,8L:16D,25°C,80%,Adult
+SRR1663700,PRJNA268379,SD_NB,Adult,Ae_albo_sd_nb_1,SRR1663700_1.fastq.gz;SRR1663700_2.fastq.gz,paired-end,non-diapause-inducing,8L:16D,25°C,80%,Adult
+SRR1663697,PRJNA268379,SD_BM,Adult,Ae_albo_sd_bm_4,SRR1663697_1.fastq.gz;SRR1663697_2.fastq.gz,paired-end,diapause-inducing,8L:16D,25°C,80%,Adult
+SRR1663689,PRJNA268379,SD_BM,Adult,Ae_albo_sd_bm_3,SRR1663689_1.fastq.gz;SRR1663689_2.fastq.gz,paired-end,diapause-inducing,8L:16D,25°C,80%,Adult
+SRR1663687,PRJNA268379,SD_BM,Adult,Ae_albo_sd_bm_2,SRR1663687_1.fastq.gz;SRR1663687_2.fastq.gz,paired-end,diapause-inducing,8L:16D,25°C,80%,Adult
+SRR1663685,PRJNA268379,SD_BM,Adult,Ae_albo_sd_bm_1,SRR1663685_1.fastq.gz;SRR1663685_2.fastq.gz,paired-end,diapause-inducing,8L:16D,25°C,80%,Adult

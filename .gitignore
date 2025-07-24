@@ -1,0 +1,187 @@
+# AI ASSISTANT: READ USER_RULES.md FIRST - FOLLOW FORMAT EXACTLY
+# RNA-seq Analysis .gitignore
+
+# Large data files and compressed archives
+data/raw/**
+data/sra/**
+data/processed/*.bam
+data/processed/*.sam
+*.fastq
+*.fastq.gz
+*.fasta
+*.fa
+*.fq
+*.fq.gz
+*.gz
+*.bz2
+*.xz
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+
+# Reference files (large) - will be available on Zenodo
+data/references/*.fa
+data/references/*.fasta
+data/references/*.fasta.gz
+data/references/*.fa.gz
+data/references/*.gtf
+data/references/*.gff
+data/references/*.gff.gz
+data/references/*.fai
+data/references/*.gzi
+data/references/salmon_index/
+data/references/kallisto_index/
+data/references/bowtie2_index/
+data/references/star_index/
+
+# Manuscripts and reference text files (only in metadata)
+# Keep important documentation and analysis files
+!README.md
+!*.md
+!*.Rmd
+
+# Large manuscript files in metadata (exclude)
+data/metadata/Huang_et_al_2015.txt
+data/metadata/Poelchau_et_al_2013*.txt
+data/metadata/*.pdf
+
+# Analysis outputs (keep summaries but not large files)
+output/quantification/*.sf
+output/quantification/*.tsv
+output/qc/*.zip
+output/qc/*.html
+logs/*.log
+logs/*.out
+logs/*.err
+results/
+output/
+test_output/
+*.xlsx
+
+# Large result files
+*.sf
+*.counts
+*.fpkm
+*.tpm
+multiqc_data/
+multiqc_report.html
+
+# R specific
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj.user/
+.Rproj.user/
+*.log
+
+# Python specific
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Docker
+.docker/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# IDE files
+.vscode/settings.json
+.idea/
+
+# Conda environments
+*.conda
+*.env
+
+# SRA cache
+~/.ncbi/
+
+# MultiQC
+multiqc_data/
+
+# Nextflow work directories
+work/
+temp/
+.nextflow/
+.nextflow.log*
+timeline*.html
+trace*.txt
+dag*.svg
+
+# Singularity containers and cache
+singularity/
+singularity_temp_cache/
+*.sif
+*.img
+*.sqsh
+
+# Container and cache directories
+cache/
+.cache/
+tmp/
+temp/
+
+# SLURM output files
+*.o.txt
+*.ERROR.txt
+logs/*.o.txt
+logs/*.ERROR.txt
+samplesheet_*.csv
+
+# HPC-specific configuration (contains local paths)
+hpc_config.sh
+*_config_local.sh
+
+# Keep these important files and directories
+!output/figures/
+!output/tables/
+!data/metadata/
+!scripts/
+!scripts/01_download_data/
+!scripts/02_run_rnaseq/
+!scripts/03_qc_analysis/
+!scripts/04_differential_expression/
+!scripts/05_visualization/
+!scripts/utils/
+!*.md
+!*.Rmd
+
+# Keep important metadata files (small)
+!data/metadata/*.csv
+!data/metadata/*.txt
+!data/metadata/*.json
+!data/sample_mapping_*.csv
+!data/sra_metadata.csv
+
+# Keep configuration files
+!nf-core/configs/
+!*.config
+!hpc_config.template.sh
+
+# Keep documentation
+!docs/
