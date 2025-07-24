@@ -132,6 +132,8 @@ temp/
 timeline*.html
 trace*.txt
 dag*.svg
+output/nf-work/
+output/nf-temp/
 
 # Singularity containers and cache
 singularity/

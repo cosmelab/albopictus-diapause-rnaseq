@@ -1,0 +1,172 @@
+[
+  {
+    "accession": "SRR652072",
+    "dataset": "PRJNA187045",
+    "condition": "D_11d",
+    "life_stage": "Pharate_larvae",
+    "description": "Ae. albopictus D 11d pharate larvae, rep 1b",
+    "fastq_1": "Pharate_Larvae/SRR652072_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Pharate_Larvae/SRR652072_2.fastq.gz"
+  },
+  {
+    "accession": "SRR652088",
+    "dataset": "PRJNA187045",
+    "condition": "D_11d",
+    "life_stage": "Pharate_larvae",
+    "description": "Ae. albopictus D 11d pharate larvae, rep 4",
+    "fastq_1": "Pharate_Larvae/SRR652088_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Pharate_Larvae/SRR652088_2.fastq.gz"
+  },
+  {
+    "accession": "SRR652090",
+    "dataset": "PRJNA187045",
+    "condition": "D_11d",
+    "life_stage": "Pharate_larvae",
+    "description": "Ae. albopictus D 11d pharate larvae, rep 2",
+    "fastq_1": "Pharate_Larvae/SRR652090_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Pharate_Larvae/SRR652090_2.fastq.gz"
+  },
+  {
+    "accession": "SRR652091",
+    "dataset": "PRJNA187045",
+    "condition": "D_21d",
+    "life_stage": "Pharate_larvae",
+    "description": "Ae. albopictus D 21d pharate larvae, rep 1",
+    "fastq_1": "Pharate_Larvae/SRR652091_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Pharate_Larvae/SRR652091_2.fastq.gz"
+  },
+  {
+    "accession": "SRR652092",
+    "dataset": "PRJNA187045",
+    "condition": "D_21d",
+    "life_stage": "Pharate_larvae",
+    "description": "Ae. albopictus D 21d pharate larvae, rep 2",
+    "fastq_1": "Pharate_Larvae/SRR652092_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Pharate_Larvae/SRR652092_2.fastq.gz"
+  },
+  {
+    "accession": "SRR652097",
+    "dataset": "PRJNA187045",
+    "condition": "D_21d",
+    "life_stage": "Pharate_larvae",
+    "description": "Ae. albopictus D 21d pharate larvae, rep 4",
+    "fastq_1": "Pharate_Larvae/SRR652097_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Pharate_Larvae/SRR652097_2.fastq.gz"
+  },
+  {
+    "accession": "SRR652098",
+    "dataset": "PRJNA187045",
+    "condition": "D_40d",
+    "life_stage": "Pharate_larvae",
+    "description": "Ae. albopictus D 40d pharate larvae, rep 2",
+    "fastq_1": "Pharate_Larvae/SRR652098_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Pharate_Larvae/SRR652098_2.fastq.gz"
+  },
+  {
+    "accession": "SRR652099",
+    "dataset": "PRJNA187045",
+    "condition": "D_40d",
+    "life_stage": "Pharate_larvae",
+    "description": "Ae. albopictus D 40d pharate larvae, rep 3",
+    "fastq_1": "Pharate_Larvae/SRR652099_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Pharate_Larvae/SRR652099_2.fastq.gz"
+  },
+  {
+    "accession": "SRR652100",
+    "dataset": "PRJNA187045",
+    "condition": "D_40d",
+    "life_stage": "Pharate_larvae",
+    "description": "Ae. albopictus D 40d pharate larvae, rep 4",
+    "fastq_1": "Pharate_Larvae/SRR652100_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Pharate_Larvae/SRR652100_2.fastq.gz"
+  },
+  {
+    "accession": "SRR652101",
+    "dataset": "PRJNA187045",
+    "condition": "ND_11d",
+    "life_stage": "Pharate_larvae",
+    "description": "Ae. albopictus ND 11d pharate larvae, rep 1",
+    "fastq_1": "Pharate_Larvae/SRR652101_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Pharate_Larvae/SRR652101_2.fastq.gz"
+  },
+  {
+    "accession": "SRR652102",
+    "dataset": "PRJNA187045",
+    "condition": "ND_11d",
+    "life_stage": "Pharate_larvae",
+    "description": "Ae. albopictus ND 11d pharate larvae, rep 2",
+    "fastq_1": "Pharate_Larvae/SRR652102_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Pharate_Larvae/SRR652102_2.fastq.gz"
+  },
+  {
+    "accession": "SRR652103",
+    "dataset": "PRJNA187045",
+    "condition": "ND_11d",
+    "life_stage": "Pharate_larvae",
+    "description": "Ae. albopictus ND 11d pharate larvae, rep 4",
+    "fastq_1": "Pharate_Larvae/SRR652103_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Pharate_Larvae/SRR652103_2.fastq.gz"
+  },
+  {
+    "accession": "SRR652116",
+    "dataset": "PRJNA187045",
+    "condition": "ND_21d",
+    "life_stage": "Pharate_larvae",
+    "description": "Ae. albopictus ND 21d pharate larvae, rep 1",
+    "fastq_1": "Pharate_Larvae/SRR652116_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Pharate_Larvae/SRR652116_2.fastq.gz"
+  },
+  {
+    "accession": "SRR652118",
+    "dataset": "PRJNA187045",
+    "condition": "ND_21d",
+    "life_stage": "Pharate_larvae",
+    "description": "Ae. albopictus ND 21d pharate larvae, rep 2",
+    "fastq_1": "Pharate_Larvae/SRR652118_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Pharate_Larvae/SRR652118_2.fastq.gz"
+  },
+  {
+    "accession": "SRR652119",
+    "dataset": "PRJNA187045",
+    "condition": "ND_21d",
+    "life_stage": "Pharate_larvae",
+    "description": "Ae. albopictus ND 21d pharate larvae, rep 3",
+    "fastq_1": "Pharate_Larvae/SRR652119_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Pharate_Larvae/SRR652119_2.fastq.gz"
+  },
+  {
+    "accession": "SRR652120",
+    "dataset": "PRJNA187045",
+    "condition": "ND_40d",
+    "life_stage": "Pharate_larvae",
+    "description": "Ae. albopictus ND 40d pharate larvae, rep 3",
+    "fastq_1": "Pharate_Larvae/SRR652120_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Pharate_Larvae/SRR652120_2.fastq.gz"
+  },
+  {
+    "accession": "SRR672801",
+    "dataset": "PRJNA187045",
+    "condition": "ND_40d",
+    "life_stage": "Pharate_larvae",
+    "description": "Ae. albopictus ND 40d pharate larvae, rep 4",
+    "fastq_1": "Pharate_Larvae/SRR672801_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Pharate_Larvae/SRR672801_2.fastq.gz"
+  }
+]

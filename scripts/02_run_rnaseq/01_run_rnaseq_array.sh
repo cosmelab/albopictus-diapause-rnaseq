@@ -5,30 +5,27 @@
 #SBATCH --time=24:00:00          # Reduced time since we're processing one sample
 #SBATCH --job-name=rnaseq
 #SBATCH --array=1-44             # Array of 44 samples
-#SBATCH -o logs/rnaseq_%A_%a.o.txt    # %A is job ID, %a is array task ID
-#SBATCH -e logs/rnaseq_%A_%a.ERROR.txt
+#SBATCH -o /bigdata/cosmelab/lcosme/projects/albopictus-diapause-rnaseq/logs/rnaseq_%A_%a.o.txt
+#SBATCH -e /bigdata/cosmelab/lcosme/projects/albopictus-diapause-rnaseq/logs/rnaseq_%A_%a.ERROR.txt
 
 # Load required modules
 module load nextflow
 module load singularity
 
-# Create logs directory if it doesn't exist
-mkdir -p logs
+# Set project base directory
+PROJECT_BASE="/bigdata/cosmelab/lcosme/projects/albopictus-diapause-rnaseq"
 
-# Set up environment - use variables for portability
-# Conda environment paths (customizable via hpc_config.sh)
-export CONDA_PKGS_DIRS="${CONDA_PKGS_DIRS:-/bigdata/cosmelab/lcosme/conda/pkgs}"
-export CONDA_ENVS_PATH="${CONDA_ENVS_PATH:-/bigdata/cosmelab/lcosme/conda/envs}"
-
-# Project-specific paths
-PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-export NXF_HOME="${NXF_HOME:-/bigdata/cosmelab/lcosme/.nextflow}"
-export NXF_WORK="${PROJECT_ROOT}/work"
-export NXF_TEMP="${PROJECT_ROOT}/temp"
+# Set up environment
+export CONDA_PKGS_DIRS="/bigdata/cosmelab/lcosme/conda/pkgs"
+export CONDA_ENVS_PATH="/bigdata/cosmelab/lcosme/conda/envs"
+export NXF_HOME="/bigdata/cosmelab/lcosme/.nextflow"
+export NXF_WORK="${PROJECT_BASE}/output/nf-work"
+export NXF_TEMP="${PROJECT_BASE}/output/nf-temp"
 export NXF_OPTS="-Xms512m -Xmx4g"
-export NXF_SINGULARITY_CACHEDIR="${PROJECT_ROOT}/singularity"
+export NXF_SINGULARITY_CACHEDIR="${PROJECT_BASE}/output/singularity"
 
 # Create and set permissions for work directories
+mkdir -p ${PROJECT_BASE}/logs
 mkdir -p $NXF_WORK
 mkdir -p $NXF_TEMP
 mkdir -p $NXF_SINGULARITY_CACHEDIR
@@ -36,8 +33,8 @@ chmod -R 755 $NXF_WORK
 chmod -R 755 $NXF_TEMP
 chmod -R 755 $NXF_SINGULARITY_CACHEDIR
 
-# Change to project root directory
-cd "${PROJECT_ROOT}"
+# Change to project directory
+cd "${PROJECT_BASE}"
 
 # Get the sample name and FASTQ paths for this array task
 # Add 1 to SLURM_ARRAY_TASK_ID to skip the header line
@@ -95,7 +92,7 @@ mkdir -p output/${PROJECT}
 # Run the pipeline for this sample
 nextflow run nf-core/rnaseq \
     -profile singularity \
-    -c nf-core/configs/hpc_batch.conf \
+    -c scripts/02_run_rnaseq/hpc_batch.conf \
     --input samplesheet_${SLURM_ARRAY_TASK_ID}.csv \
     --outdir output/${PROJECT}/${SAMPLE_ID} \
     --fasta "$FASTA" \
@@ -125,14 +122,14 @@ if [ $? -eq 0 ] && [ -d "output/${PROJECT}/${SAMPLE_ID}" ]; then
     echo "Pipeline completed successfully for sample ${SAMPLE_ID}"
     
     # Create logs directory if it doesn't exist
-    mkdir -p logs/samplesheets
+    mkdir -p ${PROJECT_BASE}/logs/samplesheets
     
     # Move the samplesheet to logs directory with timestamp
-    mv samplesheet_${SLURM_ARRAY_TASK_ID}.csv logs/samplesheets/${SAMPLE_ID}_${RUN_ID}.csv
+    mv samplesheet_${SLURM_ARRAY_TASK_ID}.csv ${PROJECT_BASE}/logs/samplesheets/${SAMPLE_ID}_${RUN_ID}.csv
 else
     echo "Pipeline failed or output directory not found. Check the logs for details."
     # Move the samplesheet to logs directory even if pipeline fails
-    mkdir -p logs/samplesheets
-    mv samplesheet_${SLURM_ARRAY_TASK_ID}.csv logs/samplesheets/${SAMPLE_ID}_${RUN_ID}_FAILED.csv
+    mkdir -p ${PROJECT_BASE}/logs/samplesheets
+    mv samplesheet_${SLURM_ARRAY_TASK_ID}.csv ${PROJECT_BASE}/logs/samplesheets/${SAMPLE_ID}_${RUN_ID}_FAILED.csv
     exit 1
 fi

@@ -1,0 +1,122 @@
+[
+  {
+    "accession": "SRR458462",
+    "dataset": "PRJNA158021",
+    "condition": "DI_72h",
+    "life_stage": "Embryo",
+    "description": "Diapause inducing, 72-78h post-oviposition, replicate 1",
+    "fastq_1": "Embryos/SRR458462_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Embryos/SRR458462_2.fastq.gz"
+  },
+  {
+    "accession": "SRR458463",
+    "dataset": "PRJNA158021",
+    "condition": "DI_135h",
+    "life_stage": "Embryo",
+    "description": "Diapause inducing, 135-141h post-oviposition, replicate 1",
+    "fastq_1": "Embryos/SRR458463_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Embryos/SRR458463_2.fastq.gz"
+  },
+  {
+    "accession": "SRR458464",
+    "dataset": "PRJNA158021",
+    "condition": "NDI_72h",
+    "life_stage": "Embryo",
+    "description": "Non-diapause inducing, 72-78h post-oviposition, replicate 1",
+    "fastq_1": "Embryos/SRR458464_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Embryos/SRR458464_2.fastq.gz"
+  },
+  {
+    "accession": "SRR458465",
+    "dataset": "PRJNA158021",
+    "condition": "NDI_135h",
+    "life_stage": "Embryo",
+    "description": "Non-diapause inducing, 135-141h post-oviposition, replicate 1",
+    "fastq_1": "Embryos/SRR458465_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Embryos/SRR458465_2.fastq.gz"
+  },
+  {
+    "accession": "SRR458466",
+    "dataset": "PRJNA158021",
+    "condition": "DI_72h",
+    "life_stage": "Embryo",
+    "description": "Diapause inducing, 72-78h post-oviposition, replicate 2",
+    "fastq_1": "Embryos/SRR458466_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Embryos/SRR458466_2.fastq.gz"
+  },
+  {
+    "accession": "SRR458467",
+    "dataset": "PRJNA158021",
+    "condition": "DI_135h",
+    "life_stage": "Embryo",
+    "description": "Diapause inducing, 135-141h post-oviposition, replicate 2",
+    "fastq_1": "Embryos/SRR458467_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Embryos/SRR458467_2.fastq.gz"
+  },
+  {
+    "accession": "SRR458468",
+    "dataset": "PRJNA158021",
+    "condition": "NDI_72h",
+    "life_stage": "Embryo",
+    "description": "Non-diapause inducing, 72-78h post-oviposition, replicate 2",
+    "fastq_1": "Embryos/SRR458468_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Embryos/SRR458468_2.fastq.gz"
+  },
+  {
+    "accession": "SRR458469",
+    "dataset": "PRJNA158021",
+    "condition": "NDI_135h",
+    "life_stage": "Embryo",
+    "description": "Non-diapause inducing, 135-141h post-oviposition, replicate 2",
+    "fastq_1": "Embryos/SRR458469_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Embryos/SRR458469_2.fastq.gz"
+  },
+  {
+    "accession": "SRR458470",
+    "dataset": "PRJNA158021",
+    "condition": "DI_72h",
+    "life_stage": "Embryo",
+    "description": "Diapause inducing, 72-78h post-oviposition, replicate 3",
+    "fastq_1": "Embryos/SRR458470_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Embryos/SRR458470_2.fastq.gz"
+  },
+  {
+    "accession": "SRR458471",
+    "dataset": "PRJNA158021",
+    "condition": "DI_135h",
+    "life_stage": "Embryo",
+    "description": "Diapause inducing, 135-141h post-oviposition, replicate 3",
+    "fastq_1": "Embryos/SRR458471_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Embryos/SRR458471_2.fastq.gz"
+  },
+  {
+    "accession": "SRR458472",
+    "dataset": "PRJNA158021",
+    "condition": "NDI_72h",
+    "life_stage": "Embryo",
+    "description": "Non-diapause inducing, 72-78h post-oviposition, replicate 3",
+    "fastq_1": "Embryos/SRR458472_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Embryos/SRR458472_2.fastq.gz"
+  },
+  {
+    "accession": "SRR458473",
+    "dataset": "PRJNA158021",
+    "condition": "NDI_135h",
+    "life_stage": "Embryo",
+    "description": "Non-diapause inducing, 135-141h post-oviposition, replicate 3",
+    "fastq_1": "Embryos/SRR458473_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Embryos/SRR458473_2.fastq.gz"
+  }
+]

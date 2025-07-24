@@ -1,0 +1,162 @@
+[
+  {
+    "accession": "SRR1664192",
+    "dataset": "PRJNA268379",
+    "condition": "LD_NB",
+    "life_stage": "Adult",
+    "description": "Ae_albo_ld_nb_4",
+    "fastq_1": "Adult_Females/SRR1664192_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Adult_Females/SRR1664192_2.fastq.gz"
+  },
+  {
+    "accession": "SRR1664190",
+    "dataset": "PRJNA268379",
+    "condition": "LD_NB",
+    "life_stage": "Adult",
+    "description": "Ae_albo_ld_nb_3",
+    "fastq_1": "Adult_Females/SRR1664190_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Adult_Females/SRR1664190_2.fastq.gz"
+  },
+  {
+    "accession": "SRR1663916",
+    "dataset": "PRJNA268379",
+    "condition": "LD_NB",
+    "life_stage": "Adult",
+    "description": "Ae_albo_ld_nb_2",
+    "fastq_1": "Adult_Females/SRR1663916_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Adult_Females/SRR1663916_2.fastq.gz"
+  },
+  {
+    "accession": "SRR1663913",
+    "dataset": "PRJNA268379",
+    "condition": "LD_NB",
+    "life_stage": "Adult",
+    "description": "Ae_albo_ld_nb_1",
+    "fastq_1": "Adult_Females/SRR1663913_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Adult_Females/SRR1663913_2.fastq.gz"
+  },
+  {
+    "accession": "SRR1663911",
+    "dataset": "PRJNA268379",
+    "condition": "LD_BM",
+    "life_stage": "Adult",
+    "description": "Ae_albo_ld_bm_4",
+    "fastq_1": "Adult_Females/SRR1663911_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Adult_Females/SRR1663911_2.fastq.gz"
+  },
+  {
+    "accession": "SRR1663843",
+    "dataset": "PRJNA268379",
+    "condition": "LD_BM",
+    "life_stage": "Adult",
+    "description": "Ae_albo_ld_bm_3",
+    "fastq_1": "Adult_Females/SRR1663843_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Adult_Females/SRR1663843_2.fastq.gz"
+  },
+  {
+    "accession": "SRR1663769",
+    "dataset": "PRJNA268379",
+    "condition": "LD_BM",
+    "life_stage": "Adult",
+    "description": "Ae_albo_ld_bm_2",
+    "fastq_1": "Adult_Females/SRR1663769_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Adult_Females/SRR1663769_2.fastq.gz"
+  },
+  {
+    "accession": "SRR1663754",
+    "dataset": "PRJNA268379",
+    "condition": "LD_BM",
+    "life_stage": "Adult",
+    "description": "Ae_albo_ld_bm_1",
+    "fastq_1": "Adult_Females/SRR1663754_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Adult_Females/SRR1663754_2.fastq.gz"
+  },
+  {
+    "accession": "SRR1663709",
+    "dataset": "PRJNA268379",
+    "condition": "SD_NB",
+    "life_stage": "Adult",
+    "description": "Ae_albo_sd_nb_4",
+    "fastq_1": "Adult_Females/SRR1663709_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Adult_Females/SRR1663709_2.fastq.gz"
+  },
+  {
+    "accession": "SRR1663707",
+    "dataset": "PRJNA268379",
+    "condition": "SD_NB",
+    "life_stage": "Adult",
+    "description": "Ae_albo_sd_nb_3",
+    "fastq_1": "Adult_Females/SRR1663707_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Adult_Females/SRR1663707_2.fastq.gz"
+  },
+  {
+    "accession": "SRR1663703",
+    "dataset": "PRJNA268379",
+    "condition": "SD_NB",
+    "life_stage": "Adult",
+    "description": "Ae_albo_sd_nb_2",
+    "fastq_1": "Adult_Females/SRR1663703_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Adult_Females/SRR1663703_2.fastq.gz"
+  },
+  {
+    "accession": "SRR1663700",
+    "dataset": "PRJNA268379",
+    "condition": "SD_NB",
+    "life_stage": "Adult",
+    "description": "Ae_albo_sd_nb_1",
+    "fastq_1": "Adult_Females/SRR1663700_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Adult_Females/SRR1663700_2.fastq.gz"
+  },
+  {
+    "accession": "SRR1663697",
+    "dataset": "PRJNA268379",
+    "condition": "SD_BM",
+    "life_stage": "Adult",
+    "description": "Ae_albo_sd_bm_4",
+    "fastq_1": "Adult_Females/SRR1663697_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Adult_Females/SRR1663697_2.fastq.gz"
+  },
+  {
+    "accession": "SRR1663689",
+    "dataset": "PRJNA268379",
+    "condition": "SD_BM",
+    "life_stage": "Adult",
+    "description": "Ae_albo_sd_bm_3",
+    "fastq_1": "Adult_Females/SRR1663689_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Adult_Females/SRR1663689_2.fastq.gz"
+  },
+  {
+    "accession": "SRR1663687",
+    "dataset": "PRJNA268379",
+    "condition": "SD_BM",
+    "life_stage": "Adult",
+    "description": "Ae_albo_sd_bm_2",
+    "fastq_1": "Adult_Females/SRR1663687_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Adult_Females/SRR1663687_2.fastq.gz"
+  },
+  {
+    "accession": "SRR1663685",
+    "dataset": "PRJNA268379",
+    "condition": "SD_BM",
+    "life_stage": "Adult",
+    "description": "Ae_albo_sd_bm_1",
+    "fastq_1": "Adult_Females/SRR1663685_1.fastq.gz",
+    "sequencing_type": "paired-end",
+    "fastq_2": "Adult_Females/SRR1663685_2.fastq.gz"
+  }
+]
