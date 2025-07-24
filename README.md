@@ -70,57 +70,36 @@ git clone https://github.com/cosmelab/albopictus-diapause-rnaseq.git
 cd albopictus-diapause-rnaseq
 ```
 
-### 2. Build Container
+### 2. Build Container (Required First)
 ```bash
 module load singularity-ce/3.9.3
+
+# Choose either registry:
+# From GitHub Container Registry:
 singularity pull albopictus-diapause-rnaseq.sif docker://ghcr.io/cosmelab/albopictus-diapause-rnaseq:latest
+
+# OR from Docker Hub:
+singularity pull albopictus-diapause-rnaseq.sif docker://cosmelab/albopictus-diapause-rnaseq:latest
+
+# Test the container works:
+singularity shell --cleanenv --bind $PWD:/proj albopictus-diapause-rnaseq.sif
 ```
 
 ### 3. Run Analysis Pipeline
 ```bash
-# Download SRA data (3 datasets in parallel) - uses container
+# Download SRA data (3 datasets in parallel) - requires the .sif container
 sbatch scripts/01_download_data/01_sra_array.sh
 
 # Run nf-core RNA-seq pipeline - uses nf-core containers
 sbatch scripts/02_run_rnaseq/01_run_rnaseq_array.sh
-
-# Quality control and differential expression - uses container
-singularity exec --cleanenv --bind $PWD:/proj albopictus-diapause-rnaseq.sif \
-  python scripts/03_qc_analysis/01_create_qc_plots.py
-singularity exec --cleanenv --bind $PWD:/proj albopictus-diapause-rnaseq.sif \
-  Rscript scripts/04_differential_expression/PRJNA268379_adult_females_Angela_DESeq.R
-```
-
-## Container Usage
-
-### Available Registries
-```bash
-# GitHub Container Registry
-singularity pull albopictus-diapause-rnaseq.sif docker://ghcr.io/cosmelab/albopictus-diapause-rnaseq:latest
-
-# Docker Hub
-singularity pull albopictus-diapause-rnaseq.sif docker://cosmelab/albopictus-diapause-rnaseq:latest
-```
-
-### Running Analysis
-```bash
-# Interactive shell
-singularity shell --cleanenv --bind $PWD:/proj albopictus-diapause-rnaseq.sif
-
-# Execute commands
-singularity exec --cleanenv --bind $PWD:/proj albopictus-diapause-rnaseq.sif \
-  Rscript scripts/differential_expression/PRJNA268379_adult_females_Angela_DESeq.R
 ```
 
 ## Analysis Workflow
 
-The pipeline consists of five main steps:
+The current pipeline consists of two main steps:
 
 1. **Data Download**: Retrieve SRA datasets using parallel array jobs
 2. **RNA-seq Processing**: nf-core/rnaseq pipeline with Salmon quantification
-3. **Quality Control**: FastQC, MultiQC, and custom QC plots
-4. **Differential Expression**: DESeq2 analysis per dataset
-5. **Meta-Analysis**: Cross-platform integration and candidate gene ranking
 
 ## Key Tools
 
@@ -129,10 +108,7 @@ The pipeline consists of five main steps:
 - **Salmon**: Transcript quantification
 
 **Data Analysis (custom container):**
-- **DESeq2**: Differential expression analysis
-- **tximport**: Transcript-to-gene aggregation
-- **sva**: Batch effect correction
-- **metafor**: Meta-analysis across datasets
+- Analysis tools available for future development
 
 ## Documentation
 
