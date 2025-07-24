@@ -854,11 +854,12 @@ singularity exec --cleanenv --bind /path/to/project:/proj albopictus-diapause-rn
 
 ## 📚 **Documentation**
 
-- **[WORKFLOW.md](WORKFLOW.md)**: Step-by-step analysis pipeline
-- **[PROJECT_RULES.md](PROJECT_RULES.md)**: Analysis strategy and statistical models  
-- **[hpcc_nfcore_install.md](hpcc_nfcore_install.md)**: HPC deployment instructions
-- **[RNAseq_Analysis_Best_Practices.md](RNAseq_Analysis_Best_Practices.md)**: Best practices guide
-- **[USER_RULES.md](USER_RULES.md)**: AI assistant interaction guidelines
+- **[workflow.md](workflow.md)**: Step-by-step analysis pipeline and methodology
+- **[project_rules.md](project_rules.md)**: Analysis strategy and statistical models  
+- **[hpcc_nfcore_install.md](hpcc_nfcore_install.md)**: HPC deployment and Nextflow installation
+- **[github_dockerhub_setup.md](github_dockerhub_setup.md)**: GitHub and Docker Hub integration setup
+- **[de_analysis_design_repo.md](de_analysis_design_repo.md)**: Differential expression analysis design
+- **[assistant_rules.md](assistant_rules.md)**: AI assistant guidelines and rules
 
 ## 🤝 **Contributing**
 
