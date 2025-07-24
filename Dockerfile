@@ -186,20 +186,17 @@ RUN git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh && \
     echo 'eval "$(starship init zsh)"' >> ~/.zshrc && \
     echo 'export PATH="/opt/conda/bin:${PATH}"' >> ~/.bashrc
 
-# Set working directory and copy files in a single layer
+# Set working directory and create directory structure
 WORKDIR /proj
-COPY setup.sh /proj/
-RUN chmod +x /proj/setup.sh && \
-    mkdir -p /proj/data/{raw,metadata,references} \
+RUN mkdir -p /proj/data/{raw,metadata,references} \
     /proj/scripts/{01_download_data,02_run_rnaseq,03_qc_analysis,04_differential_expression,05_visualization,utils} \
     /proj/logs
 
 # Set environment variables
 ENV R_LIBS_USER=/usr/local/lib/R/site-library
 
-# Copy project files and make scripts executable in a single layer
+# Copy project files
 COPY . /proj/
-RUN chmod +x /proj/start_jupyter.sh
 
 # Final environment setup
 ENTRYPOINT ["zsh", "-l", "-c", "source ~/.zshrc && exec zsh"]
