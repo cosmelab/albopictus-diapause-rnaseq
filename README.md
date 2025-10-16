@@ -85,7 +85,18 @@ singularity pull albopictus-diapause-rnaseq.sif docker://cosmelab/albopictus-dia
 singularity shell --cleanenv --bind $PWD:/proj albopictus-diapause-rnaseq.sif
 ```
 
-### 3. Run Analysis Pipeline
+### 3. Clone Collaborator Reference Repository
+```bash
+# Clone the collaborator's analysis repository for comparison
+mkdir -p data/collaborator_repos
+cd data/collaborator_repos
+git clone https://github.com/srmarzec/albopictus_remapping.git
+cd ../..
+
+# This contains their original analysis scripts using STAR + HTSeq
+```
+
+### 4. Run Analysis Pipeline
 ```bash
 # Download SRA data (3 datasets in parallel) - requires the .sif container
 sbatch scripts/01_download_data/01_sra_array.sh

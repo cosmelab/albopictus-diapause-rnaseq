@@ -24,13 +24,14 @@ Read this file first before any action.
 12. Never create documentation files (.md) unless specifically asked
 13. Keep responses concise and to the point
 14. Only use emojis if explicitly requested
+15. DO NOT USE CAPS for .md filenames - use lowercase only (except for README.md)
 
 ## Git/Repository Specific
 
-15. If git operations are needed, explain the exact commands you will run and their purpose
-16. Never force push without explicit permission
-17. Never modify .gitignore or other git configuration files without permission
-18. Always verify paths and configurations before making changes
+16. If git operations are needed, explain the exact commands you will run and their purpose
+17. Never force push without explicit permission
+18. Never modify .gitignore or other git configuration files without permission
+19. Always verify paths and configurations before making changes
 
 ## Failure to Follow Rules
 

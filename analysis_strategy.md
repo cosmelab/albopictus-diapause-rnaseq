@@ -13,13 +13,18 @@ Build a fully reproducible analysis addressing molecular ecology reviewers' conc
 
 ### 1.1 Clone Collaborator Repositories
 ```bash
-mkdir -p references/collaborator_repos
-cd references/collaborator_repos
+# Clone the collaborator's remapping repository for reference
+mkdir -p data/collaborator_repos
+cd data/collaborator_repos
+git clone https://github.com/srmarzec/albopictus_remapping.git
 
-# Clone relevant repos (need to identify URLs):
-# - Huang et al. 2015 (PRJNA268379 - Adults)
-# - Poelchau et al. 2013a (PRJNA158021 - Embryos)
-# - Poelchau et al. 2013b (PRJNA187045 - Pharate larvae)
+# This repo contains:
+# - Original analysis scripts for all three studies
+# - STAR + HTSeq pipeline (vs our Salmon approach)
+# - Project-specific DESeq2 scripts:
+#   - Angela → PRJNA268379 (Adult females)
+#   - Mackenzie → PRJNA158021 (Embryos)
+#   - Sarah → PRJNA187045 (Pharate larvae)
 ```
 
 ### 1.2 Extract Key Information

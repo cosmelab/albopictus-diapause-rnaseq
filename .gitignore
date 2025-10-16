@@ -160,6 +160,19 @@ samplesheet_*.csv
 hpc_config.sh
 *_config_local.sh
 
+# Collaborator repositories (cloned for reference)
+data/collaborator_repos/
+
+# Git hook documentation (system-specific)
+git-hook-setup.md
+
+# Old scripts from previous attempts (before nf-core)
+scripts/03_qc_analysis/OLD_*.py
+
+# Temporary documentation/planning files
+scripts/03_qc_analysis/qc_*.md
+scripts/03_qc_analysis/README.md
+
 # Keep these important files and directories
 !output/figures/
 !output/tables/
