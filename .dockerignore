@@ -1,63 +1,35 @@
-# Git
-.git
+# Git files
+.git/
 .gitignore
+.gitattributes
 
-# Data directories (too large for build context)
+# Large data files
 data/raw/
-data/processed/
 data/sra/
-results/
 output/
+work/
+temp/
+singularity/
+*.sif
+*.img
 
-# Logs
+# Logs and temp files
 logs/
 *.log
+*.out
+*.err
 
-# Temporary files
-test_output/
-*.tmp
-*.temp
+# Collaborator repos (will be cloned fresh)
+data/collaborator_repos/
 
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
+# Old/temporary files
+scripts/03_qc_analysis/OLD_*.py
+scripts/03_qc_analysis/qc_*.md
 
-# OS files
+# System-specific files
 .DS_Store
-Thumbs.db
+git-hook-setup.md
+hpc_config.sh
 
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
-.venv/
-
-# R
-.Rhistory
-.RData
-.Ruserdata
-
-# Jupyter
-.ipynb_checkpoints/
-
-# Docker
-Dockerfile
-docker-compose.yml
-.dockerignore
-
-# Personal information and HPC-specific files
-nf-core/configs/hpc_batch.conf
-scripts/transfer_hpc_data.sh
-scripts/sra_ucr.sh
-scripts/hpc_config_local.sh
-scripts/nf-core_test_ucr.sh
-scripts/run_rnaseq.sh
-scripts/install_zsh_hpc.sh
-scripts/install_zsh_macos.sh
-hpcc_nfcore_install.md
+# Results (will be generated)
+results/

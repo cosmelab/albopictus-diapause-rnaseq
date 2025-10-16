@@ -188,7 +188,9 @@ RUN git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh && \
 
 # Set working directory and create directory structure
 WORKDIR /proj
-RUN mkdir -p /proj/data/{raw,metadata,references} \
+RUN mkdir -p /proj/data/{raw,metadata,references,collaborator_repos} \
+    /proj/results/{01_qc_analysis,02_count_matrices,03_de_analysis,04_meta_analysis} \
+    /proj/results/01_qc_analysis/{metrics,figures,tables} \
     /proj/scripts/{01_download_data,02_run_rnaseq,03_qc_analysis,04_differential_expression,05_visualization,utils} \
     /proj/logs
 
