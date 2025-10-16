@@ -153,6 +153,7 @@ temp/
 *.ERROR.txt
 logs/*.o.txt
 logs/*.ERROR.txt
+logs/samplesheets/
 samplesheet_*.csv
 
 # HPC-specific configuration (contains local paths)
