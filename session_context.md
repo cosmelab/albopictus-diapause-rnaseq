@@ -50,3 +50,23 @@ export GITHUB_TOKEN=$(cat ~/.github_token)
 - Which reference genome version to use for final analysis
 - How to handle platform batch effects (GAIIx vs HiSeq2000)
 - Where to get the 34 GWAS candidate genes list
+
+## TODO for QC Analysis (Next Session):
+1. Keep PRJNA IDs but add clear labels in figures:
+   - PRJNA268379 = "Huang et al. 2015 - Adult Females"
+   - PRJNA158021 = "Poelchau et al. 2013a - Embryos"
+   - PRJNA187045 = "Poelchau et al. 2013b - Pharate Larvae"
+
+2. For QC, analyze per project first:
+   - QC metrics table for PRJNA268379 (16 samples)
+   - QC metrics table for PRJNA158021 (12 samples)
+   - QC metrics table for PRJNA187045 (17 samples)
+
+3. Create project-specific QC figures:
+   - PCA for each project separately (to check for outliers within experiment)
+   - Box plots of QC metrics grouped by experimental conditions
+   - For PRJNA268379: group by photoperiod and blood meal
+   - For PRJNA158021: group by timepoint and diapause status
+   - For PRJNA187045: group by timepoint and diapause status
+
+4. Then one overall figure showing all projects for comparison

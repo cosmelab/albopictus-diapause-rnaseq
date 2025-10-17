@@ -96,14 +96,14 @@ def extract_gene_counts_stats(sample_path):
     
     # Get the sample column (should be only one)
     if df.shape[1] > 0:
-        counts = df.iloc[:, 0]
+        counts = pd.to_numeric(df.iloc[:, 0], errors='coerce').fillna(0)
         
         metrics = {
-            'total_genes': len(counts),
-            'genes_detected_gt0': (counts > 0).sum(),
-            'genes_detected_gt10': (counts > 10).sum(),
-            'genes_detected_gt100': (counts > 100).sum(),
-            'genes_detected_gt1000': (counts > 1000).sum(),
+            'total_genes': int(len(counts)),
+            'genes_detected_gt0': int((counts > 0).sum()),
+            'genes_detected_gt10': int((counts > 10).sum()),
+            'genes_detected_gt100': int((counts > 100).sum()),
+            'genes_detected_gt1000': int((counts > 1000).sum()),
         }
     else:
         metrics = {}

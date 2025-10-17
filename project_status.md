@@ -48,15 +48,23 @@
 
 ### Analysis Plan
 
-#### Phase 1: QC Assessment (Current)
+#### Phase 1: QC Assessment (Completed!)
 - [x] Create results directory structure (`results/01_qc_analysis/`)
 - [x] Create comprehensive analysis strategy document
 - [x] Clone collaborator GitHub repository (srmarzec/albopictus_remapping)
 - [x] Create analysis comparison document
-- [ ] Extract metrics from `multiqc_general_stats.txt` files
-- [ ] Compile mapping statistics across all samples
+- [x] Extract metrics from `multiqc_general_stats.txt` files
+- [x] Compile mapping statistics across all samples (see results/01_qc_analysis/)
+- [x] Generate QC figures (PDF files in results/01_qc_analysis/figures/)
+- [ ] Fix gene count detection (currently showing 0 genes)
 - [ ] Check for batch effects between projects/platforms
-- [ ] Create QC report for reviewers addressing their concerns
+- [ ] Create final QC report for reviewers
+
+**QC Results Summary (Oct 16, 2025):**
+- All 44 samples successfully processed
+- Average mapping rate: 80-91% (good quality)
+- Read counts: 11.9M (embryos), 18.8M (larvae), 28.1M (adults)
+- Need to fix gene detection counts in script
 
 #### Phase 2: Count Matrix Preparation
 - [ ] Gather `salmon.merged.gene_counts.tsv` from all samples
