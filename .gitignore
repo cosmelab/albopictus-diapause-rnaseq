@@ -166,6 +166,12 @@ data/collaborator_repos/
 # Git hook documentation (system-specific)
 git-hook-setup.md
 
+# GitHub authentication tokens (NEVER commit these!)
+.github_token
+~/.github_token
+*.token
+*_token
+
 # Old scripts from previous attempts (before nf-core)
 scripts/03_qc_analysis/OLD_*.py
 

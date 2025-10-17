@@ -31,5 +31,10 @@ scripts/03_qc_analysis/qc_*.md
 git-hook-setup.md
 hpc_config.sh
 
+# Authentication tokens (NEVER include in container!)
+.github_token
+*.token
+*_token
+
 # Results (will be generated)
 results/

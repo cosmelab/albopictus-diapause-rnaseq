@@ -32,6 +32,13 @@ singularity shell --cleanenv --bind $PWD:/proj albopictus-diapause-rnaseq.sif
 cd /proj
 ```
 
+## GitHub Authentication
+```bash
+# Load saved GitHub token
+export GITHUB_TOKEN=$(cat ~/.github_token)
+# Token saved securely at ~/.github_token (created Oct 16, 2025)
+```
+
 ## Active Todo Items
 - Extract QC metrics from all 44 samples (HIGH PRIORITY)
 - Create QC summary tables and figures
