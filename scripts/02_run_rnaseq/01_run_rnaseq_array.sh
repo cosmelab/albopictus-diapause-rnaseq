@@ -23,15 +23,18 @@ export NXF_WORK="${PROJECT_BASE}/output/nf-work"
 export NXF_TEMP="${PROJECT_BASE}/output/nf-temp"
 export NXF_OPTS="-Xms512m -Xmx4g"
 export NXF_SINGULARITY_CACHEDIR="${PROJECT_BASE}/output/singularity"
+export SINGULARITY_TMPDIR="${PROJECT_BASE}/output/singularity_temp"
 
 # Create and set permissions for work directories
 mkdir -p ${PROJECT_BASE}/logs
 mkdir -p $NXF_WORK
 mkdir -p $NXF_TEMP
 mkdir -p $NXF_SINGULARITY_CACHEDIR
+mkdir -p $SINGULARITY_TMPDIR
 chmod -R 755 $NXF_WORK
 chmod -R 755 $NXF_TEMP
 chmod -R 755 $NXF_SINGULARITY_CACHEDIR
+chmod -R 755 $SINGULARITY_TMPDIR
 
 # Change to project directory
 cd "${PROJECT_BASE}"
@@ -74,8 +77,9 @@ if [ ! -f "$FASTQ2" ]; then
 fi
 
 # Check if reference files exist
-FASTA="data/references/albo.fasta.gz"
-GTF="data/references/genes_fixed.rsem.fixed.gtf"
+FASTA="data/references/AalbF3_genome/AalbF3_genome.fa.gz"
+GTF="data/references/AalbF3_genome/AalbF3_annotation.gtf.gz"
+RRNA_MANIFEST="data/references/AalbF3_genome/rrna_db_manifest.txt"
 
 if [ ! -f "$FASTA" ]; then
     echo "Error: FASTA file not found: $FASTA"
@@ -84,6 +88,11 @@ fi
 
 if [ ! -f "$GTF" ]; then
     echo "Error: GTF file not found: $GTF"
+    exit 1
+fi
+
+if [ ! -f "$RRNA_MANIFEST" ]; then
+    echo "Error: rRNA manifest file not found: $RRNA_MANIFEST"
     exit 1
 fi
 
@@ -98,6 +107,9 @@ nextflow run nf-core/rnaseq \
     --outdir output/${PROJECT}/${SAMPLE_ID} \
     --fasta "$FASTA" \
     --gtf "$GTF" \
+    --remove_ribo_rna \
+    --ribo_database_manifest "$RRNA_MANIFEST" \
+    --save_reference \
     --skip_markduplicates true \
     --skip_bigwig true \
     --skip_stringtie true \

@@ -25,6 +25,8 @@ Read this file first before any action.
 13. Keep responses concise and to the point
 14. Only use emojis if explicitly requested
 15. DO NOT USE CAPS for .md filenames - use lowercase only (except for README.md)
+16. NEVER create directories and leave them empty
+17. Before creating any directory, ensure it will be immediately populated with files
 
 ## Git/Repository Specific
 

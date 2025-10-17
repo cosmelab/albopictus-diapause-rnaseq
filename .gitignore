@@ -26,14 +26,22 @@ data/references/*.fasta
 data/references/*.fasta.gz
 data/references/*.fa.gz
 data/references/*.gtf
+data/references/*.gtf.gz
 data/references/*.gff
 data/references/*.gff.gz
+data/references/*.gff3
 data/references/*.fai
 data/references/*.gzi
 data/references/salmon_index/
 data/references/kallisto_index/
 data/references/bowtie2_index/
 data/references/star_index/
+
+# Raw downloads from GenBank/NCBI/Dryad (keep cleaned versions only)
+data/references/AalbF3_genome/raw_downloads/
+data/references/dryad_download/
+data/references/previously_used/
+data/references/**/*.pdf
 
 # Manuscripts and reference text files (only in metadata)
 # Keep important documentation and analysis files
