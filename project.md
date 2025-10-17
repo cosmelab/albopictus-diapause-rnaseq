@@ -510,11 +510,22 @@ scripts/03_qc_analysis/
 
 ## GITHUB AUTHENTICATION
 
+**IMPORTANT:** Git authentication requires loading your saved token before push/pull operations.
+
 ```bash
 # Load saved GitHub token (for private repos)
 export GITHUB_TOKEN=$(cat ~/.github_token)
-# Token created: October 16, 2025
+
+# Configure git to use the token
+git config --global credential.helper store
+git config --global url."https://${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
+
+# Now you can push/pull
+git push
 ```
+
+**Token location:** `~/.github_token` (created October 16, 2025)
+**Note:** Token is in .gitignore and will never be committed
 
 ---
 
