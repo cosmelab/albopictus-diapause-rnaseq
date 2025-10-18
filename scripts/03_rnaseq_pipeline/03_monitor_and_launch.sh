@@ -17,7 +17,7 @@
 # Purpose: Monitor test job (array index 1), then automatically launch
 #          remaining jobs (2-44) if successful, or email if failed
 #
-# Usage: sbatch scripts/02_run_rnaseq/monitor_and_launch.sh <TEST_JOB_ID>
+# Usage: sbatch scripts/03_rnaseq_pipeline/03_monitor_and_launch.sh <TEST_JOB_ID>
 #
 # Author: Claude Code
 # Date: October 17, 2025
@@ -158,7 +158,7 @@ if [[ "${JOB_STATUS}" == "COMPLETED" ]]; then
         echo ""
 
         # Submit remaining jobs
-        FULL_JOB_ID=$(sbatch --array=2-44 scripts/02_run_rnaseq/01_run_rnaseq_array.sh | awk '{print $NF}')
+        FULL_JOB_ID=$(sbatch --array=2-44 scripts/03_rnaseq_pipeline/02_run_rnaseq_array.sh | awk '{print $NF}')
 
         echo "Submitted job array: ${FULL_JOB_ID}"
         echo "Array indices: 2-44 (43 samples)"

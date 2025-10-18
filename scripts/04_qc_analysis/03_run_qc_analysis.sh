@@ -24,7 +24,7 @@ echo "========================"
 # Step 1: Extract QC metrics
 echo "Step 1: Extracting QC metrics from all samples..."
 singularity exec --cleanenv --bind $PROJECT_DIR:/proj $CONTAINER \
-    bash -c "cd /proj && python scripts/03_qc_analysis/01_extract_qc_metrics.py"
+    bash -c "cd /proj && python scripts/04_qc_analysis/01_extract_qc_metrics.py"
 
 # Check if extraction was successful
 if [ -f "results/01_qc_analysis/metrics/all_samples_qc_metrics.csv" ]; then
@@ -34,7 +34,7 @@ if [ -f "results/01_qc_analysis/metrics/all_samples_qc_metrics.csv" ]; then
     # Step 2: Generate figures
     echo "Step 2: Generating QC figures..."
     singularity exec --cleanenv --bind $PROJECT_DIR:/proj $CONTAINER \
-        bash -c "cd /proj && python scripts/03_qc_analysis/02_generate_qc_figures.py"
+        bash -c "cd /proj && python scripts/04_qc_analysis/02_generate_qc_figures.py"
     
     echo ""
     echo "QC analysis complete!"
