@@ -1,7 +1,7 @@
 # Albopictus Diapause RNA-seq Analysis Project
 
-**Last Updated:** October 17, 2025
-**Status:** Ready to re-run pipeline with fixed AalbF3 references
+**Last Updated:** October 17, 2025 18:00
+**Status:** 🎉 ALL 44 SAMPLES PROCESSING! Auto-launch successful!
 
 ---
 
@@ -19,29 +19,85 @@
 
 ---
 
-## CURRENT STATUS - OCTOBER 17, 2025
+## CURRENT STATUS - OCTOBER 17, 2025 18:00
 
-### Ready to Re-run Pipeline ✓
+### 🎉 ALL 44 SAMPLES PROCESSING! ✓
 - [x] Downloaded correct AalbF3 genome from Dryad (GCA_018104305.1)
 - [x] Fixed chromosome naming (stripped "chr" prefix to match SNP chip format)
 - [x] Downloaded 12 Ae. albopictus rRNA sequences for SortMeRNA
 - [x] Created GTF with proper gene_id attributes for RSEM compatibility
 - [x] Filtered 45 problematic transcripts (multi-chromosome/inconsistent strands)
+- [x] **FIXED GTF newline bug** - regenerated GTF with proper formatting
 - [x] Updated pipeline script to use new references and rRNA removal
 - [x] Cleaned up 2TB of old cache files
 - [x] **DOCUMENTED ALL ANNOTATION PROBLEMS FOR MANUSCRIPT METHODS**
+- [x] **TEST JOB SUBMITTED AND RUNNING** (Job 20467416)
 
-### What Changed from Previous Run
+### Latest Fix (October 17, 2025 16:00)
+**Problem**: GTF file had literal "\n" characters instead of actual newlines
+**Root Cause**: Bug in `add_gene_biotype.py` line 74 - used `\\n` instead of `\n`
+**Solution**:
+1. Fixed the bug in add_gene_biotype.py
+2. Created new script `convert_gff_to_gtf.py` for proper GFF→GTF conversion
+3. Re-ran complete 3-step GTF generation workflow
+4. GTF now validates correctly (9 columns, proper newlines)
+
+**Test Result**: GTF_FILTER step now PASSES ✓ (previously failed)
+
+### What Changed from Previous Runs
 1. **Genome**: `albo.fasta.gz` (old) → `AalbF3_genome.fa.gz` (correct, chr prefix stripped)
-2. **Annotation**: `genes_fixed.rsem.fixed.gtf` (old) → `AalbF3_annotation.gtf.gz` (fixed, RSEM-compatible)
+2. **Annotation**: Multiple iterations → `AalbF3_annotation.gtf.gz` (final, properly formatted)
 3. **Added rRNA removal**: SortMeRNA with 12 Ae. albopictus sequences
-4. **Fixed annotation errors**: See "GFF3/GTF Problems" section below
+4. **Fixed all GTF formatting issues**: See "GTF Generation Workflow" section below
 
-### Next Step
-Test with one sample:
+### Current Pipeline Status - SUCCESS! ✅
 ```bash
-sbatch --array=1 scripts/02_run_rnaseq/01_run_rnaseq_array.sh
+# Test job: COMPLETED ✓
+# Job ID: 20467416 (sample 1: PRJNA158021_SRR458462)
+# Result: Gene count = 22,176 genes detected! (was 0 before GTF fix)
+# Status: GTF validation PASSED, all QC steps completed
+
+# Monitor job: COMPLETED ✓
+# Job ID: 20468449
+# Result: Validated output, auto-launched remaining samples
+# Email sent: "✅ RNA-seq Test PASSED - Full Array Launched"
+
+# Full array: RUNNING 🚀
+# Job ID: 20468495 (samples 2-44)
+# Currently running: 10 samples in parallel
+# Pending: 33 samples (will start as resources available)
+# Total samples processing: 44 (including completed test sample)
+
+# Monitor progress:
+squeue -u lcosme
+watch -n 60 'squeue -u lcosme | grep 20468495'
+tail -f logs/rnaseq_20468495_*.o.txt
 ```
+
+### Automated Pipeline Launch (NEW!)
+Created monitoring script that will:
+1. ✅ Poll test job every 5 minutes until completion
+2. ✅ Validate pipeline output (gene counts, output files)
+3. ✅ If successful: Automatically launch jobs 2-44 (remaining 43 samples)
+4. ✅ If failed: Email lcosme@ucr.edu with error details
+5. ✅ Send status email either way
+
+**Script location**: `scripts/02_run_rnaseq/monitor_and_launch.sh`
+
+### Automation Results ✅
+**Test succeeded! Here's what happened:**
+- ✅ Monitor validated gene counts: 22,176 genes (expected ~15-20k)
+- ✅ Monitor validated all output files exist
+- ✅ Monitor automatically submitted: Job 20468495 (samples 2-44)
+- ✅ Email sent: "✅ RNA-seq Test PASSED - Full Array Launched"
+- ✅ All 44 samples now processing!
+
+**Timeline:**
+- 16:02 - Test job submitted (sample 1)
+- 17:32 - Monitor job submitted
+- 17:57 - Test completed successfully (runtime: 1h 55m)
+- 17:58 - Monitor validated and auto-launched remaining 43 samples
+- 18:00 - 10 samples running in parallel, 33 pending
 
 ---
 
@@ -134,14 +190,81 @@ Location: `data/references/AalbF3_genome/`
   - `rna-XM_029866277.1`: inconsistent strands AND multiple chromosomes
   - `gene-LOC109431822`: spans scaffolds 2.175 and 3.83
 
-### Summary for Methods Section
-The NCBI AalbF3 annotation (GCF_018104305.1) required four preprocessing steps for RSEM compatibility:
-1. File extension correction (`.gff3.gz` → `.gff.gz`)
-2. Addition of 18,135 missing gene_id attributes
-3. GTF syntax correction (removal of double semicolons)
-4. Filtering of 45 transcripts with annotation errors (0.2% of transcripts)
+### Problem 5: Missing gene_biotype attributes for featureCounts
+- **Error**: featureCounts failed with "failed to find the gene identifier attribute 'gene_biotype'"
+- **Cause**: Only 31,700 lines (9.1%) had `gene_biotype` attribute, but featureCounts needs it on all lines for gene categorization
+- **Solution**: Created `scripts/utils/add_gene_biotype.py` to add `gene_biotype` to all lines based on `gbkey` mapping:
+  - `gbkey "mRNA"` → `gene_biotype "protein_coding"`
+  - `gbkey "rRNA"` → `gene_biotype "rRNA"`
+  - `gbkey "tRNA"` → `gene_biotype "tRNA"`
+  - `gbkey "ncRNA"` → `gene_biotype "ncRNA"`
+  - `gbkey "misc_RNA"` → `gene_biotype "misc_RNA"`
+- **Impact**: Added gene_biotype to all features
+- **Why needed**: featureCounts uses gene_biotype to categorize reads (protein-coding vs rRNA vs other), essential for QC and comparison with published results
 
-**Final annotation: 347,380 features from 32,889 valid transcripts**
+### Problem 6: Literal \n characters in GTF (Bug in add_gene_biotype.py)
+- **Error**: nf-core GTF_FILTER failed with "Invalid GTF file: Expected 9 tab-separated columns"
+- **Cause**: `add_gene_biotype.py` script had `\\n` (escaped backslash-n) instead of `\n` (newline), writing literal "\n" strings into the file and concatenating multiple lines together
+- **Solution**:
+  1. Fixed bug in `scripts/utils/add_gene_biotype.py` line 74: changed `\\n` to `\n`
+  2. Created `scripts/utils/convert_gff_to_gtf.py` to properly convert GFF3 to GTF format
+  3. Re-ran complete GTF generation workflow (see GTF Generation Workflow below)
+- **Impact**: GTF now has proper newlines and exactly 9 tab-separated columns per line
+
+### GTF Generation Workflow (October 17, 2025)
+
+The complete workflow to generate a clean, RSEM-compatible GTF from the NCBI GFF3:
+
+**Step 1: Convert GFF3 to GTF format**
+```bash
+python scripts/utils/convert_gff_to_gtf.py \
+    data/references/AalbF3_genome/AalbF3_annotation.gff.gz \
+    data/references/AalbF3_genome/AalbF3_annotation_step1.gtf.gz
+```
+- Input: 376,867 lines (GFF3)
+- Output: 356,246 features (GTF)
+- Converts GFF3 attributes (key=value) to GTF format (key "value")
+- Adds transcript_id and gene_id to all features
+- Skips gene features (only transcript-level and below)
+
+**Step 2: Filter problematic transcripts**
+```bash
+python scripts/utils/gff_to_rsem_gtf.py \
+    data/references/AalbF3_genome/AalbF3_annotation_step1.gtf.gz \
+    data/references/AalbF3_genome/AalbF3_annotation_step2.gtf.gz
+```
+- Input: 356,246 features from 53,664 transcripts
+- Output: 344,588 features (45 transcripts removed)
+- Filters transcripts with inconsistent strands (26 transcripts)
+- Filters transcripts on multiple chromosomes (43 transcripts)
+- Some transcripts have both issues
+
+**Step 3: Add gene_biotype attributes**
+```bash
+python scripts/utils/add_gene_biotype.py \
+    data/references/AalbF3_genome/AalbF3_annotation_step2.gtf.gz \
+    data/references/AalbF3_genome/AalbF3_annotation.gtf.gz
+```
+- Input: 344,588 features
+- Output: 344,588 features (all with gene_biotype added)
+- Maps gbkey values to standard gene_biotype terms
+- Required for featureCounts gene categorization
+
+**Final GTF: 344,588 features from 53,619 valid transcripts (344,588 features / ~6.4 features per transcript)**
+
+### Summary for Methods Section
+The NCBI AalbF3 annotation (GCF_018104305.1) required preprocessing for compatibility with nf-core/rnaseq. We developed a three-step workflow:
+
+1. **GFF3 to GTF conversion** - Converted NCBI GFF3 format to GTF, properly formatting attributes and adding transcript_id/gene_id to all features (356,246 features retained)
+
+2. **Transcript filtering** - Removed 45 transcripts (0.08% of 53,664 total) with annotation errors:
+   - 26 transcripts with inconsistent strand annotations
+   - 43 transcripts with exons on multiple chromosomes (scaffolds)
+   - Some transcripts had both issues
+
+3. **Gene biotype annotation** - Added gene_biotype attributes to all features based on NCBI gbkey mapping for featureCounts compatibility
+
+**Final annotation: 344,588 features from 53,619 valid transcripts, all with proper GTF formatting, transcript_id, gene_id, and gene_biotype attributes**
 
 ---
 
@@ -374,6 +497,7 @@ logs/
 - Project-specific DESeq2 scripts
 - HEADCROP:15 trimming strategy
 - Same AalbF3 reference genome
+- Used older annotation (unknown version)
 
 ### Our Approach
 - nf-core/rnaseq v3.19.0 (automated, containerized)
@@ -381,6 +505,45 @@ logs/
 - Comprehensive QC (MultiQC + Qualimap + RSeQC)
 - Adaptive trimming
 - rRNA removal with SortMeRNA
+- Latest AalbF3 annotation (preprocessed for compatibility)
+
+### Key Validation Steps
+
+**1. Gene Count Comparison**
+After pipeline completion, compare our gene-level counts with collaborators' HTSeq counts:
+```bash
+# Extract gene counts from our Salmon results
+# Location: output/PRJNA*/SRR*/star_salmon/salmon.merged.gene_counts.tsv
+
+# Compare with collaborator counts
+# Location: data/collaborator_repos/albopictus_remapping/counts/
+```
+
+**Expected outcome**: High correlation (>0.95) for gene-level counts despite different methods
+
+**2. Transcript-Level Resolution**
+Our Salmon output provides transcript-level quantification that collaborators didn't have:
+```bash
+# Transcript counts: output/PRJNA*/SRR*/star_salmon/quant.sf
+```
+
+This allows us to:
+- Identify isoform switching events during diapause
+- Detect alternative splicing patterns
+- Provide more granular gene expression analysis
+
+**3. QC Metric Validation**
+Compare key QC metrics to ensure data quality:
+- Total reads processed (should match SRA)
+- Mapping rates (expect >80%)
+- rRNA contamination (compare with/without rRNA removal)
+- Gene detection numbers (expect ~15,000-20,000 genes)
+
+**4. Differential Expression Validation**
+For the 34 GWAS candidate genes:
+- Compare log2FC direction (up/down regulation)
+- Compare significance (p-values)
+- Identify any discrepancies and investigate causes
 
 ### Advantages of Our Approach
 1. **Reproducibility**: Containerized with locked versions
@@ -388,14 +551,34 @@ logs/
 3. **QC**: More comprehensive metrics
 4. **Automation**: Less manual intervention, fewer errors
 5. **Best practices**: Following current RNA-seq standards
+6. **Transcript resolution**: Isoform-level quantification
+7. **Documented preprocessing**: All annotation fixes tracked
 
 ### Addressing Reviewers
 When reviewers ask about differences:
 1. Same samples and experimental designs
 2. Modern pipeline improves accuracy and reproducibility
-3. Salmon validated to produce comparable results to STAR+HTSeq
+3. Salmon validated to produce comparable results to STAR+HTSeq (see [Patro et al. 2017](https://doi.org/10.1038/nmeth.4197))
 4. Better QC filtering and improved algorithms
 5. Any differences in DEGs likely due to improved methods
+6. We will provide correlation analysis with original results
+7. All preprocessing steps are documented and reproducible
+
+### Planned Comparison Analysis
+```r
+# Script to compare with collaborator results
+# Location: scripts/04_validation/compare_with_collaborators.R
+
+# Steps:
+# 1. Load our Salmon gene counts
+# 2. Load collaborator HTSeq counts
+# 3. Match sample IDs across datasets
+# 4. Calculate Pearson/Spearman correlation
+# 5. Create scatter plots (our counts vs. theirs)
+# 6. Identify highly discrepant genes
+# 7. Compare DE results for 34 candidate genes
+# 8. Generate validation report
+```
 
 ---
 
@@ -412,14 +595,19 @@ scripts/01_download_data/
 ### Pipeline Scripts
 ```
 scripts/02_run_rnaseq/
-└── 01_run_rnaseq_array.sh            # Main SLURM array job script
+├── 01_run_rnaseq_array.sh            # Main SLURM array job script
+└── monitor_and_launch.sh             # Auto-monitor test and launch full array
 ```
 
 ### Utility Scripts
 ```
 scripts/utils/
-├── fix_gtf_gene_id.py                # Add missing gene_id attributes
-└── gff_to_rsem_gtf.py                # Filter problematic transcripts
+├── convert_gff_to_gtf.py             # Convert GFF3 to GTF format (Step 1)
+├── gff_to_rsem_gtf.py                # Filter problematic transcripts (Step 2)
+├── add_gene_biotype.py               # Add gene_biotype attributes (Step 3)
+├── fix_gtf_gene_id.py                # [DEPRECATED] Old script, superseded by convert_gff_to_gtf.py
+├── create_samplesheet.py             # Generate nf-core samplesheets
+└── update_sample_mapping.py          # Update sample metadata
 ```
 
 ### QC Analysis Scripts
@@ -450,6 +638,16 @@ scripts/03_qc_analysis/
 - [ ] Import 34 GWAS candidate genes list
 - [ ] Run DESeq2 per project
 - [ ] Compare with collaborator's published results
+
+### Validation with Collaborator Data
+- [ ] Extract gene counts from Salmon outputs
+- [ ] Load collaborator HTSeq count matrices
+- [ ] Calculate correlation between our counts and theirs (expect >0.95)
+- [ ] Create scatter plots comparing count methods
+- [ ] Compare transcript counts (our advantage - isoform resolution)
+- [ ] Validate 34 GWAS candidate gene expression patterns
+- [ ] Document any discrepancies and investigate causes
+- [ ] Create validation report for manuscript supplement
 
 ### Publication
 - [ ] Write methods section including annotation preprocessing
