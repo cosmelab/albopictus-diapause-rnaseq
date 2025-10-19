@@ -1,7 +1,7 @@
 # Albopictus Diapause RNA-seq Analysis Project
 
-**Last Updated:** October 18, 2025 17:19
-**Status:** 🏃 RUNNING - All 44 samples submitted with featureCounts + Salmon validation (Run 4, Job ID: 20486713)
+**Last Updated:** October 18, 2025 17:47
+**Status:** ✅ RUNNING CORRECTLY - Nextflow submitting child SLURM jobs (Job ID: 20487198, ~50 jobs active)
 
 ---
 
@@ -28,17 +28,17 @@
 - [x] Updated all script cross-dependencies
 - [x] Following bioinformatics best practices for reproducibility
 
-### 🏃 RUN 4 IN PROGRESS - featureCounts Validation
+### 🏃 RUN 4 IN PROGRESS - Correct Nextflow Orchestrator Approach
 - [x] Downloaded correct AalbF3 genome from Dryad (GCA_018104305.1)
 - [x] Fixed chromosome naming (stripped "chr" prefix to match SNP chip format)
 - [x] Downloaded 12 Ae. albopictus rRNA sequences for SortMeRNA
 - [x] Created GTF with proper gene_id attributes for RSEM compatibility
 - [x] Filtered 45 problematic transcripts (multi-chromosome/inconsistent strands)
 - [x] **FIXED GTF newline bug** - regenerated GTF with proper formatting
-- [x] Run 1-3 completed with Salmon only (forgot featureCounts)
-- [x] **ENABLED featureCounts** for method validation
-- [x] **FIXED parallel execution conflicts** - isolated NXF_HOME and working directories per task
-- [x] **ALL 44 SAMPLES SUBMITTED** (Job 20486713, started October 18, 2025 17:19)
+- [x] **REALIZED 10-MONTH MISTAKE** - array jobs run multiple Nextflow instances (wrong)
+- [x] **SWITCHED TO CORRECT APPROACH** - single Nextflow orchestrator with all 44 samples
+- [x] **ENABLED featureCounts** for method validation alongside Salmon
+- [x] **PIPELINE RUNNING** - Job 20487053, Nextflow managing all parallelization automatically
 
 ### Latest Fix (October 17, 2025 16:00)
 **Problem**: GTF file had literal "\n" characters instead of actual newlines
@@ -87,61 +87,68 @@ grep -i "error" logs/successful_runs/20241017_full_pipeline/rnaseq_*.o.txt
 # No critical errors found ✓
 ```
 
-### Run 4: featureCounts Validation + Parallel Execution Fix (October 18, 2025)
+### Run 4: Correct Single Nextflow Orchestrator Approach (October 18, 2025)
 
 **Why Re-running:**
 - Validation strategy requires BOTH Salmon AND featureCounts to compare methods
-- Original runs had `--skip_featurecounts true` (forgot to enable it)
-- Need both quantification methods on same data (AalbF3 genome) to isolate method differences from genome differences
+- Original runs used SLURM array jobs (one Nextflow instance per sample) which causes:
+  - Cache conflicts and lock file errors
+  - Task retries and wasted I/O rebuilding indices repeatedly
+  - Inconsistent results per sample
 
-**Technical Issues Discovered:**
-When attempting to run all 44 samples in parallel, Nextflow instances conflicted on shared directories:
+**THE FUNDAMENTAL MISTAKE (10 Months):**
+We were running **44 separate Nextflow instances** (one per sample via SLURM array jobs).
 
-**Problem 1: Lock file conflicts**
-- All jobs tried to lock same `.nextflow/cache/` directory
-- Error: "Unable to acquire lock on session with ID..."
-- Cause: Shared `NXF_HOME` directory
+**The Correct Approach:**
+- Run **ONE Nextflow orchestrator** with all 44 samples in the samplesheet
+- Nextflow's SLURM executor submits individual SLURM jobs for each process (STAR, Salmon, featureCounts)
+- Nextflow handles parallelization automatically across samples
+- No cache conflicts, proper resume functionality, efficient resource use
 
-**Problem 2: Log file conflicts**
-- All jobs wrote to same `.nextflow.log` in project root
-- Caused file corruption and job failures
+**Implementation:**
+Created `scripts/03_rnaseq_pipeline/02_run_rnaseq.sh`:
+- Light orchestrator job: 4 CPUs, 16GB RAM, 72 hour limit
+- Nextflow submits child SLURM jobs for actual processing
+- Global resource caps: `--max_cpus 128 --max_memory 500.GB --max_time 72.h`
+- All 44 samples in single samplesheet: `data/metadata/samplesheet.csv`
 
-**Solution Implemented:**
-Each array task now gets completely isolated directories:
+**Configuration:**
+```bash
+nextflow run nf-core/rnaseq \
+    -r 3.19.0 \
+    -profile singularity \
+    --input data/metadata/samplesheet.csv \
+    --outdir output \
+    --aligner star_salmon \
+    --skip_featurecounts false  # ENABLED for validation
+    --skip_salmon false          # ENABLED (primary method)
+    --max_cpus 128 \
+    --max_memory '500.GB' \
+    --max_time '72.h' \
+    -resume
+```
 
-1. Unique Nextflow home per task:
-   ```bash
-   export NXF_HOME="${PROJECT_BASE}/output/nf-home-${SLURM_ARRAY_TASK_ID}"
-   ```
-   - Task 1 → `output/nf-home-1/.nextflow/`
-   - Task 2 → `output/nf-home-2/.nextflow/`
+**What Changed:**
+- ❌ Removed: SLURM array job approach (`02_run_rnaseq_array.sh.OLD_WRONG_APPROACH`)
+- ✅ Added: Single orchestrator script (`02_run_rnaseq.sh`)
+- ✅ featureCounts enabled alongside Salmon for method validation
+- ✅ Nextflow handles all parallelization and job submission
 
-2. Unique working directory per task:
-   ```bash
-   TASK_WORK_DIR="${PROJECT_BASE}/output/task-${SLURM_ARRAY_TASK_ID}"
-   cd "${TASK_WORK_DIR}"
-   ```
-   - Each task cd's to its own directory
-   - Creates `.nextflow.log` there instead of project root
+**Status:**
+- Job 20487053: Used `local` executor → failed immediately
+- Job 20487167: Fixed executor but had stale trace file → failed
+- Job 20487198: ✅ **WORKING CORRECTLY**
+  - Started: October 18, 2025 17:45
+  - Config: SLURM executor with `queue = 'epyc'`, `queueSize = 200`
+  - Nextflow submitting ~50 child SLURM jobs (nf-NFCOR processes)
+  - Jobs running on multiple nodes: r27, r31, r32, r34
+  - Monitor: `tail -f logs/rnaseq_main_20487198.o.txt`
+  - Queue: `squeue -u lcosme` shows Nextflow-managed jobs
 
-3. All paths made absolute using `${PROJECT_BASE}/`
-
-**Resume Still Works:**
-- Each task's `SLURM_ARRAY_TASK_ID` is consistent across re-runs
-- Task 5 always uses same directories: `output/task-5/` and `output/nf-home-5/`
-
-**Configuration Changes:**
-- Line 124: `--skip_featurecounts false` (was `true`)
-- Line 107: `-resume` flag added (safe to include always)
-- Line 106: `-r 3.19.0` version pinned (HPC has Nextflow 24.07.0, incompatible with nf-core 3.21.0)
-
-**Execution Decision:**
-- Skipped test-then-launch approach to save time (Christmas deadline)
-- Submitted all 44 samples immediately: `sbatch --array=1-44`
-- Risk: If configuration wrong, wastes resources on all samples
-- Confidence: High - same configuration that worked in Run 3, just added one parameter
-
-**Status:** Running (started October 18, 2025 17:XX)
+**The Fix After 10 Months:**
+- **Wrong:** SLURM array jobs (44 Nextflow instances) with `local` executor
+- **Right:** Single Nextflow orchestrator with `slurm` executor
+- Thanks to ChatGPT for providing the correct documentation
 
 ### Automated Pipeline Launch (NEW!)
 Created monitoring script that will:

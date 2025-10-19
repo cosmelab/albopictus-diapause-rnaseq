@@ -2,86 +2,63 @@
 
 **Purpose:** Run nf-core/rnaseq pipeline for quantification of all 44 samples.
 
-**Status:** 🔄 Re-running (October 18, 2025) - Added featureCounts validation + fixed parallel execution conflicts
+**Status:** 🏃 RUNNING (October 18, 2025) - Using correct single Nextflow orchestrator approach (Job 20487053)
 
 ---
 
 ## Overview
 
-This directory contains scripts for running the nf-core/rnaseq v3.19.0 pipeline on HPCC using SLURM array jobs. The pipeline processes 44 samples across 3 BioProjects in parallel.
+This directory contains the script for running the nf-core/rnaseq v3.19.0 pipeline on HPCC with SLURM. The pipeline processes all 44 samples across 3 BioProjects.
 
-## Pipeline Approach
+## ⚠️ CRITICAL: The Correct Way to Run nf-core Pipelines
 
-**Strategy:** One sample per array job for maximum parallelization and resource efficiency.
-
-**Benefits:**
-- Each sample gets dedicated resources (12 CPUs, 96GB RAM)
-- Failed samples don't affect others
-- Easy to re-run individual samples
-- Clear per-sample logs and outputs
-
-### Two Execution Strategies
-
-**Option 1: Test-Then-Launch (Conservative, Recommended)**
+**WRONG (what we did for 10 months):**
 ```bash
-# Submit test job (sample 1)
-sbatch --array=1 scripts/03_rnaseq_pipeline/02_run_rnaseq_array.sh
-
-# Use monitor script to validate and auto-launch remaining samples
-sbatch scripts/03_rnaseq_pipeline/03_monitor_and_launch.sh <TEST_JOB_ID>
+# ❌ SLURM array job with one Nextflow instance per sample
+sbatch --array=1-44 02_run_rnaseq_array.sh
+# This runs 44 separate Nextflow instances → cache conflicts, wasted resources
 ```
-- **Use when:** First time running, testing new parameters, or validating pipeline changes
-- **Benefit:** Catches errors early before wasting resources on all 44 samples
-- **Time:** Adds ~2-4 hours for test + validation
 
-**Option 2: Run All At Once (Fast, Time-Constrained)**
+**CORRECT (what we should have done):**
 ```bash
-# Submit all 44 samples immediately
-sbatch --array=1-44 scripts/03_rnaseq_pipeline/02_run_rnaseq_array.sh
+# ✅ ONE Nextflow orchestrator with all samples in samplesheet
+sbatch 02_run_rnaseq.sh
+# Nextflow submits its own SLURM jobs and manages parallelization
 ```
-- **Use when:** Confident in configuration, time-constrained, or re-running with known-good parameters
-- **Benefit:** Saves 2-4 hours by skipping test phase
-- **Risk:** If configuration wrong, wastes resources on all samples
-- **Current run (Oct 18):** Using this approach due to Christmas deadline
 
-### Parallel Execution Fix (October 18, 2025)
+**Why the array approach was wrong:**
+- Multiple Nextflow instances compete for same cache/work directories
+- Lock file conflicts and task retries
+- Rebuilds indices/containers repeatedly (wasted I/O)
+- Defeats Nextflow's built-in parallelization
 
-**Problem Discovered:**
-When running all 44 samples in parallel, Nextflow instances conflicted on shared directories:
-- All jobs tried to lock same `.nextflow/cache/` directory → lock file errors
-- All jobs wrote to same `.nextflow.log` in project root → file conflicts
+**How it should work:**
+- Submit ONE orchestrator job (light: 4 CPUs, 16GB)
+- Nextflow reads samplesheet with all 44 samples
+- Nextflow submits individual SLURM jobs for each process (STAR, Salmon, featureCounts)
+- Nextflow handles parallelization, caching, and resume automatically
 
-**Solution Implemented:**
-Each array task now gets completely isolated directories:
+## Current Approach (Corrected October 18, 2025)
 
-1. **Unique Nextflow home per task:**
-   ```bash
-   export NXF_HOME="${PROJECT_BASE}/output/nf-home-${SLURM_ARRAY_TASK_ID}"
-   ```
-   - Task 1 → `output/nf-home-1/.nextflow/`
-   - Task 2 → `output/nf-home-2/.nextflow/`
-   - Prevents lock file conflicts
+**Single Nextflow Orchestrator:**
+- ONE SLURM job runs Nextflow with all 44 samples in `data/metadata/samplesheet.csv`
+- Nextflow's SLURM executor submits child jobs for each process
+- Automatic parallelization across samples
+- Proper caching and resume functionality
 
-2. **Unique working directory per task:**
-   ```bash
-   TASK_WORK_DIR="${PROJECT_BASE}/output/task-${SLURM_ARRAY_TASK_ID}"
-   cd "${TASK_WORK_DIR}"
-   ```
-   - Task 1 cd's to `output/task-1/` → creates `.nextflow.log` there
-   - Task 2 cd's to `output/task-2/` → creates `.nextflow.log` there
-   - Prevents log file conflicts
+**Resources:**
+- Orchestrator job: 4 CPUs, 16GB RAM, 72 hours
+- Per-process jobs: Determined by nf-core pipeline labels
+- Global caps: `--max_cpus 128 --max_memory 500.GB --max_time 72.h`
 
-3. **All paths made absolute:**
-   - Since tasks no longer run from project root, all paths use `${PROJECT_BASE}/`
-
-**Resume Still Works:**
-- Each task's `SLURM_ARRAY_TASK_ID` is consistent across re-runs
-- Task 5 always uses `output/task-5/` and `output/nf-home-5/`
-- Resume finds the same cache directory automatically
+**Running:**
+```bash
+sbatch scripts/03_rnaseq_pipeline/02_run_rnaseq.sh
+```
 
 ---
 
-## Scripts (Run in Order)
+## Scripts
 
 ### 01_create_samplesheet.py
 
@@ -89,10 +66,10 @@ Each array task now gets completely isolated directories:
 
 **Input:**
 - `data/metadata/sample_info.csv`
-- FASTQ files in `data/raw_fastq/PRJNA*/`
+- FASTQ files in `data/raw/PRJNA*/`
 
 **Output:**
-- `data/metadata/samplesheet.csv`
+- `data/metadata/samplesheet.csv` (45 lines: 1 header + 44 samples)
 
 **Samplesheet Format:**
 ```csv
@@ -105,18 +82,21 @@ PRJNA268379_SRR1719052,/path/to/SRR1719052_1.fastq.gz,/path/to/SRR1719052_2.fast
 python scripts/03_rnaseq_pipeline/01_create_samplesheet.py
 ```
 
+**Status:** ✅ Already run - samplesheet exists with all 44 samples
+
 ---
 
-### 02_run_rnaseq_array.sh
+### 02_run_rnaseq.sh
 
-**Purpose:** Main SLURM array job script to run nf-core/rnaseq pipeline for each sample.
+**Purpose:** Single Nextflow orchestrator job that processes all 44 samples.
 
 **Key Features:**
-- SLURM array job (1-44 samples)
-- 12 CPUs per task, 8GB per CPU (96GB total RAM)
-- 24-hour time limit per sample
-- Automatic per-sample samplesheet creation
+- ONE Nextflow instance with all samples in samplesheet
+- Light orchestrator: 4 CPUs, 16GB RAM, 72 hour limit
+- Nextflow submits child SLURM jobs for each process (STAR, Salmon, featureCounts)
+- Automatic parallelization across samples
 - Singularity containerization
+- Proper caching and resume functionality
 
 **Pipeline Configuration:**
 
@@ -143,96 +123,54 @@ RRNA_MANIFEST="data/references/AalbF3_genome/rrna_db_manifest.txt"
 
 **Usage:**
 ```bash
-# Test with one sample first
-sbatch --array=1 scripts/03_rnaseq_pipeline/02_run_rnaseq_array.sh
-
-# Run all 44 samples
-sbatch --array=1-44 scripts/03_rnaseq_pipeline/02_run_rnaseq_array.sh
+# Submit the orchestrator job (processes all 44 samples)
+sbatch scripts/03_rnaseq_pipeline/02_run_rnaseq.sh
 ```
 
 **Logs:**
-- SLURM output: `logs/rnaseq_<JOBID>_<ARRAYID>.o.txt`
-- SLURM errors: `logs/rnaseq_<JOBID>_<ARRAYID>.ERROR.txt`
+- Main orchestrator: `logs/rnaseq_main_<JOBID>.o.txt`
+- Main errors: `logs/rnaseq_main_<JOBID>.e.txt`
+- Nextflow log: `.nextflow.log`
+- Per-process logs: `output/nf-work/`
 
-**Runtime:** ~2 hours per sample (varies by sample size)
+**Runtime:** ~24-48 hours total for all 44 samples (parallel processing)
 
----
-
-### 03_monitor_and_launch.sh
-
-**Purpose:** Automated monitoring script - validates test job and auto-launches remaining samples.
-
-**Workflow:**
-1. Monitor test job (sample 1) until completion
-2. Check SLURM job status (COMPLETED, FAILED, etc.)
-3. Validate pipeline output:
-   - Gene counts file exists
-   - Gene count > 100 lines
-   - No critical errors in log
-4. If successful: Auto-launch jobs 2-44
-5. If failed: Send email alert with error details
-6. Send status email either way
-
-**Key Validation Checks:**
+**Monitoring:**
 ```bash
-# Check Salmon gene counts file
-output/PRJNA158021/SRR458462/star_salmon/salmon.merged.gene_counts.tsv
-# Expected: ~20,000-25,000 genes
+# Watch orchestrator progress
+tail -f logs/rnaseq_main_*.o.txt
 
-# Check featureCounts output (NEW - for validation)
-output/PRJNA158021/SRR458462/star_salmon/*featureCounts.txt
-# Expected: ~20,000-25,000 genes
+# Check what SLURM jobs Nextflow has submitted
+squeue -u $USER
 
-# Both methods should detect similar gene counts
-# Previous runs with wrong GTF: 0 genes (FAILURE)
-# Successful run: 22,176 genes (SUCCESS)
+# Check Nextflow work directory
+ls -lht output/nf-work/
 ```
 
-**Usage:**
-```bash
-# First, submit test job
-TEST_JOB_ID=$(sbatch --array=1 scripts/03_rnaseq_pipeline/02_run_rnaseq_array.sh | awk '{print $NF}')
+**⚠️ CRITICAL - Resume Functionality:**
 
-# Then submit monitor job
-sbatch scripts/03_rnaseq_pipeline/03_monitor_and_launch.sh $TEST_JOB_ID
+Nextflow creates cache files needed for `-resume` to work:
+- `.nextflow.log` - execution log (in project root)
+- `.nextflow/` - cache directory (in project root)
+- `output/nf-work/` - work directory with intermediate files
+
+**DO NOT DELETE** these until analysis is completely done:
+- If you delete them, `-resume` won't work
+- Pipeline will start from scratch, wasting time/resources
+- Keep them throughout the entire analysis
+
+**After completely done:**
+```bash
+# Safe to move for archival (keeps resume capability)
+mkdir -p logs/nextflow_cache
+mv .nextflow.log logs/nextflow_cache/
+mv .nextflow logs/nextflow_cache/
+
+# Can delete work dir to save space (loses intermediate files but keeps results)
+rm -rf output/nf-work/  # Saves ~3TB
 ```
 
-**Email Notifications:**
-- ✅ Success: "RNA-seq Test PASSED - Full Array Launched"
-- ❌ Failure: "RNA-seq Test FAILED - [error details]"
-
-**Actual Run (October 17, 2025):**
-- 16:02 - Test job submitted (Job 20467416, sample 1)
-- 17:32 - Monitor job submitted (Job 20468449)
-- 17:57 - Test completed successfully (22,176 genes detected!)
-- 17:58 - Monitor auto-launched remaining 43 samples (Job 20468495)
-- 18:00 - All 44 samples processing in parallel
-
----
-
-## HPC Configuration
-
-### Critical Environment Variables
-
-**Must set before running:**
-```bash
-export SINGULARITY_TMPDIR="${PROJECT_BASE}/output/singularity_temp"
-mkdir -p $SINGULARITY_TMPDIR
-```
-
-**Why:** Singularity on HPC requires writable temp directory. Default `/tmp` often too small.
-
-### Resource Allocation
-
-**Per Sample:**
-- CPUs: 12
-- Memory: 96 GB (8GB per CPU)
-- Time: 24 hours
-- Partition: batch (default)
-
-**Total for 44 samples:**
-- CPUs: 528 (but run 10-15 at a time based on HPC availability)
-- Wall time: ~2-4 hours for full array completion
+**Lesson learned:** We deleted `.nextflow.log` after Run 3, breaking resume for Run 4. Had to delete 3.2TB cache and restart from scratch.
 
 ---
 
