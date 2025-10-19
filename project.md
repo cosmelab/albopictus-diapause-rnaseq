@@ -145,10 +145,35 @@ nextflow run nf-core/rnaseq \
   - Monitor: `tail -f logs/rnaseq_main_20487198.o.txt`
   - Queue: `squeue -u lcosme` shows Nextflow-managed jobs
 
-**The Fix After 10 Months:**
-- **Wrong:** SLURM array jobs (44 Nextflow instances) with `local` executor
-- **Right:** Single Nextflow orchestrator with `slurm` executor
-- Thanks to ChatGPT for providing the correct documentation
+**Technical Notes:**
+
+After several iterations testing different execution strategies, discovered the optimal configuration:
+
+**Previous approach (Runs 1-3):**
+- SLURM array jobs with separate Nextflow instances per sample
+- Appeared functional when HPC naturally throttled concurrency
+- Lock file conflicts emerged when attempting full parallelization
+
+**Current approach (Run 4):**
+- Single Nextflow orchestrator managing all 44 samples
+- SLURM executor (`hpc_batch.conf`) submits child jobs for each process
+- Nextflow handles parallelization: 81 jobs submitted, 24 running, 57 queued
+- `AssocGrpMemLimit` properly manages group resource allocation
+- Jobs progress automatically as resources become available
+
+**Key configuration change:**
+```groovy
+executor {
+    name = 'slurm'  // Changed from 'local'
+    queueSize = 200
+}
+process {
+    executor = 'slurm'
+    queue = 'epyc'
+}
+```
+
+**Lesson learned:** Leveraging Nextflow's native SLURM executor provides better resource management and parallelization than manual job arrays.
 
 ### Automated Pipeline Launch (NEW!)
 Created monitoring script that will:
