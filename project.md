@@ -1,7 +1,7 @@
 # Albopictus Diapause RNA-seq Analysis Project
 
-**Last Updated:** October 18, 2025 11:30
-**Status:** ✅ ALL 44 SAMPLES COMPLETED! Ready for QC analysis!
+**Last Updated:** October 18, 2025 16:45
+**Status:** ⚠️ READY TO RE-RUN - Previous cache cleared, pipeline will run from scratch with featureCounts enabled
 
 ---
 
@@ -111,6 +111,154 @@ Created monitoring script that will:
 - 17:57 - Test completed successfully (runtime: 1h 55m)
 - 17:58 - Monitor validated and auto-launched remaining 43 samples
 - 18:00 - 10 samples running in parallel, 33 pending
+
+---
+
+## VALIDATION STRATEGY - CRITICAL FOR MANUSCRIPT
+
+**Last Updated:** October 18, 2025 15:40
+
+### The Challenge: Two Variables Changed
+
+**Collaborators' original analysis:**
+- Genome: Old assembly (pre-AalbF3)
+- Pipeline: Manual (Trimmomatic → STAR → HTSeq)
+- Quantification: HTSeq gene counts
+
+**Our reanalysis:**
+- Genome: AalbF3 (GCA_018104305.1) - newer, chromosome-level assembly
+- Pipeline: nf-core/rnaseq v3.19.0 (automated, containerized)
+- Quantification: Salmon (transcript + gene counts, includes TPM)
+
+**Problem:** If our results differ from collaborators, we cannot determine if it's due to:
+1. Different genome assembly (old vs AalbF3)
+2. Different quantification method (HTSeq vs Salmon)
+
+### Solution: Run Both Quantification Methods on AalbF3
+
+**What we have (October 18, 2025):**
+- ✅ All 44 samples processed with STAR + Salmon
+- ✅ STAR alignment BAM files saved: `output/PRJNA*/SRR*/star_salmon/*.sorted.bam`
+- ✅ Salmon quantification: gene counts + TPM + transcript-level data
+- ❌ NO HTSeq/featureCounts data yet
+
+**What we need to add:**
+- Run featureCounts on existing BAM files (same input as Salmon used)
+- This gives us HTSeq-comparable gene counts on the same data
+
+**This validation approach allows us to:**
+
+1. **Show method equivalence on our data:**
+   - Compare Salmon vs featureCounts on same samples (AalbF3 genome)
+   - Calculate correlation (expect >0.95 for gene-level counts)
+   - Document any systematic differences
+
+2. **Separate genome effect from method effect:**
+   - Our featureCounts (AalbF3) vs Collaborators' HTSeq (old assembly) = genome difference
+   - Our featureCounts vs our Salmon (both AalbF3) = method difference
+   - Can attribute result differences to specific causes
+
+3. **Provide reviewer confidence:**
+   - Salmon is well-validated but some reviewers prefer HTSeq/featureCounts
+   - Having both methods on same data shows robustness
+   - Can report DEGs that are consistent across methods
+
+### Current Pipeline Output
+
+**From nf-core/rnaseq run (completed Oct 17-18, 2025):**
+
+```bash
+output/PRJNA*/SRR*/star_salmon/
+├── *.sorted.bam                          # STAR alignments (44 files, ~4-8 GB each)
+├── quant.sf                               # Salmon transcript counts
+├── salmon.merged.gene_counts.tsv          # Salmon gene counts
+├── salmon.merged.gene_tpm.tsv             # Salmon TPM values
+└── salmon.merged.transcript_tpm.tsv       # Salmon transcript TPM
+```
+
+**Pipeline parameters used:**
+- `--skip_salmon false` - Salmon WAS run ✓
+- `--skip_featurecounts true` - featureCounts was SKIPPED ✗
+
+**Why we skipped featureCounts initially:**
+- Faster runtime (Salmon is much faster than featureCounts)
+- Salmon provides transcript-level resolution (bonus data)
+- Assumed Salmon would be sufficient for modern analysis
+
+**Why we need to add featureCounts now:**
+- Need direct HTSeq-comparable counts for validation
+- Reviewers may question Salmon vs HTSeq differences
+- Allows us to separate genome vs method effects
+
+### Next Steps: Run featureCounts
+
+**Option 1: Re-run nf-core pipeline with featureCounts enabled**
+- Set `--skip_featurecounts false` in pipeline script
+- Pro: Uses same nf-core workflow, consistent processing
+- Con: Re-runs entire pipeline (~11 hours), wastes compute time
+- Decision: **NOT RECOMMENDED** - we already have everything we need
+
+**Option 2: Run featureCounts directly on existing BAMs (RECOMMENDED)**
+- Use the 44 BAM files we already have
+- Run featureCounts separately as post-processing step
+- Pro: Much faster (~1-2 hours total), no re-alignment needed
+- Con: Separate from nf-core workflow, need custom script
+- Decision: **THIS IS THE APPROACH** - efficient and practical
+
+**Implementation plan:**
+1. Write script to run featureCounts on all 44 BAM files
+2. Use same GTF annotation: `data/references/AalbF3_genome/AalbF3_annotation.gtf.gz`
+3. Use appropriate featureCounts parameters:
+   - `-t exon` (count at exon level)
+   - `-g gene_id` (summarize by gene)
+   - `-s 0` (unstranded - need to verify from collaborator scripts)
+   - `-p` (paired-end)
+   - `-B` (only count properly paired reads)
+   - `-C` (exclude chimeric fragments)
+4. Output: Gene count matrix comparable to HTSeq output
+5. Compare with Salmon counts to validate correlation
+
+**Script location (to be created):** `scripts/04_qc_analysis/run_featurecounts.sh`
+
+### Analysis Workflow After featureCounts
+
+Once we have both Salmon and featureCounts data:
+
+1. **QC Analysis (Phase 1):**
+   - Extract QC metrics from MultiQC outputs
+   - Compare mapping rates, gene detection across samples
+   - Identify any problematic samples
+
+2. **Method Comparison (Phase 2):**
+   - Correlate Salmon gene counts vs featureCounts gene counts
+   - Create scatter plots showing correlation (expect R² >0.95)
+   - Document any systematic differences
+   - Choose which counts to use for DE analysis (or run both)
+
+3. **Differential Expression (Phase 3):**
+   - Run DESeq2 on both count matrices
+   - Compare DEG lists between methods
+   - Focus on 34 GWAS candidate genes
+   - Report genes that are consistent across methods
+
+4. **Collaborator Comparison (Phase 4):**
+   - Compare our results with their published DEG lists
+   - Attribute differences to genome vs method
+   - Validate GWAS candidate gene expression patterns
+
+### Success Criteria
+
+**For validation to be successful:**
+1. Salmon vs featureCounts correlation >0.95 at gene level
+2. Majority of DEGs overlap between methods (>80%)
+3. All 34 GWAS candidate genes have quantification in both methods
+4. Can explain any differences between our results and collaborators
+
+**For manuscript Methods section:**
+- Document both quantification methods used
+- Report correlation between methods
+- State which method was used for final DE analysis (or both)
+- Justify why results differ from original publications (genome + method)
 
 ---
 
@@ -394,15 +542,26 @@ nextflow run nf-core/rnaseq \
 
 ### Directory Management
 
-**Cache directories (DELETE after each run to save space):**
-- `output/nf-work/` - Nextflow work cache (can be 2TB!)
-- `output/nf-temp/` - Temporary files
-- `output/singularity_temp/` - Singularity runtime temp
-- `output/temp_samplesheets/` - Temporary samplesheets
+**CRITICAL: What to delete and when**
 
-**Keep these directories:**
+**ONLY delete after ALL analysis is COMPLETELY finished:**
+- `.nextflow.log` - Required for `-resume` to work
+- `output/nf-work/` - Nextflow work cache (can be 3TB+, needed for resume)
+- `output/PRJNA*/SRR*/` - Actual results (never delete until published!)
+
+**Can delete between runs to save space:**
+- `output/nf-temp/` - Temporary files (safe to delete anytime)
+- `output/singularity_temp/` - Singularity runtime temp (safe to delete anytime)
+- `output/temp_samplesheets/` - Temporary samplesheets (safe to delete anytime)
+
+**Always keep:**
 - `output/singularity/` - Container images (3.8GB, reusable)
-- `output/previous_run_backup/` - Old results with wrong references
+- `.nextflow/` - Nextflow cache directory (needed)
+
+**LESSON LEARNED (Oct 18, 2025):**
+Deleted `.nextflow.log` after successful run to save space, but this broke `-resume` functionality.
+Had to delete 3.2TB cache and re-run entire pipeline from scratch.
+**DO NOT DELETE CACHE until completely done with all analysis!**
 
 ### Running the Pipeline
 ```bash
@@ -587,11 +746,26 @@ logs/
 ## COMPARISON WITH COLLABORATORS
 
 ### Their Approach (srmarzec/albopictus_remapping)
-- Manual pipeline: Trimmomatic → STAR → HTSeq
-- Project-specific DESeq2 scripts
+
+**Repository:** `git clone https://github.com/srmarzec/albopictus_remapping.git`
+**Location:** `data/collaborator_repos/` (already cloned)
+
+**Pipeline:**
+- Manual: Trimmomatic → STAR → HTSeq
 - HEADCROP:15 trimming strategy
-- Same AalbF3 reference genome
-- Used older annotation (unknown version)
+- Same AalbF3 reference genome (but older annotation version)
+
+**Project assignments:**
+- Angela → PRJNA268379 (Adult females)
+- Mackenzie → PRJNA158021 (Embryos)
+- Sarah → PRJNA187045 (Pharate larvae)
+
+**Key scripts to review:**
+- `scripts/Sarah/CountReadsAssignedToGenes.R` - How they summarized counts
+- `misc/TestingStrandedness.md` - Important for count accuracy
+- `scripts/Angela/Angela_DESeq.R` - Adult analysis
+- `scripts/Mackenzie/Mackenzie_DESeq.R` - Embryo analysis
+- `scripts/Sarah/DESeq.R` - Pharate larvae analysis
 
 ### Our Approach
 - nf-core/rnaseq v3.19.0 (automated, containerized)
@@ -954,6 +1128,417 @@ Each directory contains a `README.md` with:
 - [ ] Create manuscript-ready figures
 - [ ] Prepare supplementary data files
 - [ ] Upload reference files to Zenodo
+
+---
+
+## DIFFERENTIAL EXPRESSION ANALYSIS MODELS
+
+**Purpose:** Document the exact DESeq2 models and statistical approaches for analyzing all 3 datasets
+
+### Sample Metadata and Experimental Design
+
+| Dataset | Life_Stage | Condition | Timepoint | Photoperiod | Blood_meal | Comparison_Group |
+|---------|------------|-----------|-----------|-------------|------------|------------------|
+| PRJNA268379 | Adult | NBF_LD | Adult | Long_day | Non_fed | Non_diapause |
+| PRJNA268379 | Adult | NBF_SD | Adult | Short_day | Non_fed | Diapause_induction |
+| PRJNA268379 | Adult | BF_LD | Adult | Long_day | Blood_fed | Non_diapause |
+| PRJNA268379 | Adult | BF_SD | Adult | Short_day | Blood_fed | Diapause_induction |
+| PRJNA158021 | Embryo | D_72h | 72-78h_pov | Short_day | NA | Diapause_prep |
+| PRJNA158021 | Embryo | ND_72h | 72-78h_pov | Long_day | NA | Non_diapause |
+| PRJNA158021 | Embryo | D_141h | 135-141h_pov | Short_day | NA | Diapause_prep |
+| PRJNA158021 | Embryo | ND_141h | 135-141h_pov | Long_day | NA | Non_diapause |
+| PRJNA187045 | Pharate_larvae | D_11d | 11d_pov | Short_day | NA | Diapause_maintenance |
+| PRJNA187045 | Pharate_larvae | Q_11d | 11d_pov | Long_day | NA | Quiescence |
+| PRJNA187045 | Pharate_larvae | D_21d | 21d_pov | Short_day | NA | Diapause_maintenance |
+| PRJNA187045 | Pharate_larvae | Q_21d | 21d_pov | Long_day | NA | Quiescence |
+| PRJNA187045 | Pharate_larvae | D_40d | 40d_pov | Short_day | NA | Diapause_maintenance |
+| PRJNA187045 | Pharate_larvae | Q_40d | 40d_pov | Long_day | NA | Quiescence |
+
+### DESeq2 Analysis Models
+
+#### 1. Adult Females (PRJNA268379)
+
+**Primary Model: Diapause induction (main effect of photoperiod)**
+```r
+dds <- DESeqDataSetFromTximport(txi,
+                               colData = metadata,
+                               design = ~ blood_meal + photoperiod)
+
+# Contrast: Short_day vs Long_day (diapause vs non-diapause)
+results_adults <- results(dds, contrast = c("photoperiod", "Short_day", "Long_day"))
+```
+
+**Interaction Model: Blood meal interaction**
+```r
+dds_interaction <- DESeqDataSetFromTximport(txi,
+                                          colData = metadata,
+                                          design = ~ photoperiod * blood_meal)
+
+# Test interaction: does blood meal modify diapause response?
+results_interaction <- results(dds_interaction, name = "photoperiodShort_day.blood_mealBlood_fed")
+```
+
+#### 2. Embryos (PRJNA158021)
+
+**Primary Model: Diapause preparation**
+```r
+dds_embryo <- DESeqDataSetFromTximport(txi,
+                                      colData = metadata,
+                                      design = ~ timepoint + condition)
+
+# Contrast: Diapause vs Non-diapause
+results_embryo <- results(dds_embryo, contrast = c("condition", "Diapause", "Non_diapause"))
+```
+
+**Time-specific contrasts**
+```r
+# Time-specific contrasts for each timepoint
+results_72h <- results(dds_embryo, contrast = list("condition_Diapause_vs_Non_diapause",
+                                                  "timepoint72h.conditionDiapause"))
+```
+
+#### 3. Pharate Larvae (PRJNA187045)
+
+**Primary Model: Diapause maintenance vs quiescence**
+```r
+dds_pharate <- DESeqDataSetFromTximport(txi,
+                                       colData = metadata,
+                                       design = ~ timepoint + condition)
+
+# Contrast: Diapause vs Quiescence
+results_pharate <- results(dds_pharate, contrast = c("condition", "Diapause", "Quiescence"))
+```
+
+**Time course analysis**
+```r
+dds_timecourse <- DESeqDataSetFromTximport(txi,
+                                          colData = metadata,
+                                          design = ~ condition * timepoint)
+```
+
+### Cross-Platform Meta-Analysis
+
+#### Step 1: Individual Dataset Analysis
+
+```r
+# Analyze each dataset separately with appropriate models
+# Extract results for the 34 candidate genes
+candidate_genes <- c("LOC109397825", "LOC109405370", "LOC109398973",
+                    "LOC109397812", "LOC109405365", ...) # full candidate gene list
+
+# Function to extract candidate gene results
+extract_candidates <- function(results_obj, gene_list) {
+  results_df <- as.data.frame(results_obj)
+  results_df$gene_id <- rownames(results_df)
+  return(results_df[results_df$gene_id %in% gene_list, ])
+}
+```
+
+#### Step 2: Cross-Platform Normalization
+
+```r
+# Combine TPM data across datasets
+# Account for platform differences using batch correction
+library(sva)
+
+# Combat batch correction for cross-platform comparison
+tpm_combined <- cbind(tpm_adults, tpm_embryos, tpm_pharate)
+metadata_combined <- rbind(meta_adults, meta_embryos, meta_pharate)
+
+# Add batch variable for platform
+metadata_combined$platform <- c(rep("HiSeq2000", nrow(meta_adults)),
+                                rep("GAIIx", nrow(meta_embryos)),
+                                rep("HiSeq2000", nrow(meta_pharate)))
+
+# Batch correction
+tpm_corrected <- ComBat_seq(tpm_combined,
+                           batch = metadata_combined$platform,
+                           group = metadata_combined$diapause_status)
+```
+
+#### Step 3: Meta-Analysis Approach
+
+```r
+# Combine effect sizes across life stages
+library(metafor)
+
+# For each gene, combine log2FC across studies
+combine_effects <- function(gene_id) {
+  # Extract log2FC and SE from each dataset
+  adult_effect <- results_adults[gene_id, "log2FoldChange"]
+  adult_se <- results_adults[gene_id, "lfcSE"]
+
+  embryo_effect <- results_embryo[gene_id, "log2FoldChange"]
+  embryo_se <- results_embryo[gene_id, "lfcSE"]
+
+  pharate_effect <- results_pharate[gene_id, "log2FoldChange"]
+  pharate_se <- results_pharate[gene_id, "lfcSE"]
+
+  # Meta-analysis
+  meta_result <- rma(yi = c(adult_effect, embryo_effect, pharate_effect),
+                     sei = c(adult_se, embryo_se, pharate_se),
+                     method = "FE")
+
+  return(meta_result)
+}
+```
+
+### Key Comparisons
+
+**Primary Question:** Are GWAS candidate genes differentially expressed in diapause?
+
+**Main Contrasts:**
+1. **Adults**: Short-day (diapause-inducing) vs Long-day (non-diapause)
+2. **Embryos**: Diapause preparation vs Non-diapause development
+3. **Pharate larvae**: Diapause maintenance vs Quiescence
+
+**Secondary Questions:**
+1. **Consistency across life stages**: Do genes show same direction of effect?
+2. **Platform robustness**: Are results consistent after batch correction?
+3. **Blood meal interaction**: Does nutrition modify diapause gene expression?
+4. **Temporal dynamics**: How do expression patterns change over time?
+
+### Expected Outputs
+
+**For Each Gene:**
+- Log2 fold change in each life stage
+- Statistical significance (adjusted p-value)
+- Direction of effect consistency
+- Meta-analysis combined effect size
+- Platform-corrected expression levels
+
+**Summary Tables:**
+1. **Candidate gene expression matrix** (TPM values across all samples)
+2. **Differential expression results** (log2FC, p-values for each comparison)
+3. **Meta-analysis summary** (combined effects across life stages)
+4. **Gene prioritization ranking** (based on consistency + significance)
+
+---
+
+## CONTAINER DEVELOPMENT STRATEGY
+
+### Container Versions for Publication
+
+**Purpose:** Provide multiple container options for different user needs and reproducibility levels
+
+#### Version 1: Light Container (Tools Only)
+**Size:** ~2-3 GB
+**Contents:**
+- Base image: mambaorg/micromamba:1.5.1
+- All bioinformatics tools (nf-core, Salmon, STAR, DESeq2, etc.)
+- R packages (DESeq2, tximport, edgeR, sva, metafor)
+- Python packages (pandas, matplotlib, seaborn)
+- Analysis scripts from this repository
+
+**Use case:** Users who want to download raw data and run full analysis from scratch
+
+```dockerfile
+FROM mambaorg/micromamba:1.5.1
+
+# Copy analysis code
+COPY scripts/ /opt/scripts/
+COPY container/environment.yml /tmp/environment.yml
+
+# Install dependencies
+RUN micromamba install -y -n base -f /tmp/environment.yml && \
+    micromamba clean --all --yes
+
+# User provides data via bind mounts
+VOLUME ["/data", "/results"]
+```
+
+#### Version 2: Full Container (With Processed Data)
+**Size:** ~50-100 GB
+**Contents:**
+- Everything from Light version
+- Processed count matrices (Salmon + featureCounts)
+- QC reports and metrics
+- Sample metadata
+- Reference genome and annotation
+
+**Use case:** Users who want to reproduce analysis from count matrices without re-running alignment
+
+```dockerfile
+FROM mambaorg/micromamba:1.5.1
+
+# Copy everything
+COPY scripts/ /opt/scripts/
+COPY data/count_matrices/ /opt/data/count_matrices/
+COPY data/metadata/ /opt/data/metadata/
+COPY results/qc_reports/ /opt/data/qc_reports/
+
+# Include processed data but NOT raw FASTQ files
+```
+
+#### Version 3: Complete Container (Full Reproducibility)
+**Size:** ~500 GB - 1 TB
+**Contents:**
+- Everything from Full version
+- BAM files from STAR alignment
+- All nf-core intermediate outputs
+- Complete pipeline cache
+
+**Use case:** Complete archival and forensic reproducibility
+
+**Note:** Too large for Docker Hub - host on institutional storage or Zenodo
+
+#### Recommended Approach
+
+**For publication:**
+1. **Publish Light container** on Docker Hub (public, easy to distribute)
+2. **Publish Full container** on Zenodo with DOI (includes processed data)
+3. **Archive Complete container** on institutional storage (full forensic record)
+
+**Dockerfile template:**
+```dockerfile
+# Base image with all tools
+FROM mambaorg/micromamba:1.5.1
+
+# Copy analysis code
+COPY scripts/ /opt/scripts/
+
+# Copy processed data (optional - for full reproducibility)
+COPY data/count_matrices/ /opt/data/count_matrices/
+COPY results/qc_reports/ /opt/data/qc_reports/
+
+# Include manuscript generation scripts
+COPY manuscript/ /opt/manuscript/
+
+# Set working directory
+WORKDIR /opt
+
+# Default command
+CMD ["/bin/bash"]
+```
+
+### Reproducibility Package Contents
+
+**Include everything needed to replicate from scratch:**
+
+1. **SRA download scripts**
+   - `scripts/01_sra_download/` → Container: `/opt/scripts/data_acquisition/`
+
+2. **nf-core pipeline scripts**
+   - `scripts/03_rnaseq_pipeline/` → Container: `/opt/scripts/nf_core_pipeline/`
+
+3. **Sample metadata**
+   - `data/metadata/samples_ncbi.txt` → Container: `/opt/data/metadata/`
+
+4. **Reference preparation**
+   - `scripts/00_reference_preparation/` with Dryad download instructions
+
+**This allows users to:**
+1. Download raw data from SRA using our exact scripts
+2. Download references from Dryad using our documented approach
+3. Run nf-core pipeline with our exact parameters
+4. Reproduce all downstream analysis
+5. Verify every step of our process
+
+---
+
+## SUCCESS CRITERIA
+
+**How we define success for this project:**
+
+### 1. Technical Success
+- ✅ Can reproduce published DEG lists (or explain differences with evidence)
+- ✅ Salmon vs featureCounts correlation >0.95 at gene level
+- ✅ Majority of DEGs overlap between methods (>80%)
+- ✅ All 34 GWAS candidate genes have quantification data
+- ✅ Container allows full reproduction from count matrices
+
+### 2. Scientific Success
+- ✅ All 34 GWAS candidate genes validated across 3 life stages
+- ✅ Consistent expression patterns documented
+- ✅ Platform batch effects properly addressed
+- ✅ Statistical models appropriate for each experimental design
+
+### 3. Publication Success
+- ✅ All reviewer concerns addressed with evidence
+- ✅ Methods section complete with all preprocessing documented
+- ✅ Clear documentation for next researcher
+- ✅ Reproducibility package available (container + data)
+
+### 4. Key Principles
+
+**Guiding principles for this project:**
+- **Transparency > perfection** - Document all decisions and issues openly
+- **Every decision should be justified** - Explain choices in methods
+- **Make it easy for reviewers to verify** - Provide all data and code
+- **Reproducibility is paramount** - Others must be able to replicate our work
+
+---
+
+## REVIEWER RESPONSE STRATEGY
+
+**Template for addressing Molecular Ecology reviewer concerns**
+
+### Concern 1: Different Genome Assembly
+
+**Reviewer Question:** "Why use AalbF3 genome when original studies used a different assembly?"
+
+**Our Response:**
+- AalbF3 is the current reference-quality chromosome-level assembly (Boyle et al. 2021)
+- Higher quality: 84.3% complete BUSCO genes vs [XX]% in old assembly
+- Publicly available with complete annotation (required for reproducibility)
+- Used by collaborators in recent reanalysis (srmarzec/albopictus_remapping)
+- We validate results by running both Salmon and featureCounts on same data
+- Provide correlation analysis showing method equivalence
+
+**Evidence:**
+- Reference quality metrics comparison table
+- Mapping rate comparison (AalbF3 vs old assembly)
+- Gene detection numbers
+
+### Concern 2: Different Quantification Method (Salmon vs HTSeq)
+
+**Reviewer Question:** "How do we know Salmon results are comparable to HTSeq?"
+
+**Our Response:**
+- We ran BOTH Salmon and featureCounts (HTSeq-comparable) on same samples
+- Correlation between methods: R² = [TO BE CALCULATED] (expect >0.95)
+- DEG overlap: [XX]% of genes consistent across methods
+- Salmon advantages: faster, transcript-level resolution, TPM values
+- Salmon is well-validated in literature (Patro et al. 2017, Nature Methods)
+
+**Evidence:**
+- Scatter plot: Salmon vs featureCounts gene counts
+- Venn diagram: DEG overlap between methods
+- Correlation statistics table
+
+### Concern 3: Platform Batch Effects (GAIIx vs HiSeq2000)
+
+**Reviewer Question:** "How did you address batch effects from different sequencing platforms?"
+
+**Our Response:**
+- Platform included as covariate in DESeq2 models
+- Alternative: ComBat-seq batch correction applied
+- PCA plots show platform effect before and after correction
+- Focused on candidate genes that are consistent across platforms
+- Meta-analysis approach combines evidence across studies
+
+**Evidence:**
+- PCA plots (before/after batch correction)
+- Batch effect assessment statistics
+- Per-platform analysis results
+
+### Concern 4: Reproducibility
+
+**Reviewer Question:** "Can others reproduce your analysis?"
+
+**Our Response:**
+- Complete nf-core/rnaseq pipeline with version-locked tools
+- Singularity container available (all dependencies included)
+- All code on GitHub with full documentation
+- Count matrices and QC reports on Zenodo
+- Step-by-step instructions in README
+- All annotation preprocessing fully documented
+
+**Evidence:**
+- GitHub repository link
+- Zenodo DOI for data
+- Docker Hub link for container
+- Complete methods section with all parameters
 
 ---
 

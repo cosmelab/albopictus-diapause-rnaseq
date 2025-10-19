@@ -101,8 +101,10 @@ mkdir -p output/${PROJECT}
 
 # Run the pipeline for this sample
 nextflow run nf-core/rnaseq \
+    -r 3.19.0 \
     -profile singularity \
     -c scripts/03_rnaseq_pipeline/hpc_batch.conf \
+    -resume \
     --input output/temp_samplesheets/samplesheet_${SLURM_ARRAY_TASK_ID}.csv \
     --outdir output/${PROJECT}/${SAMPLE_ID} \
     --fasta "$FASTA" \
@@ -119,7 +121,7 @@ nextflow run nf-core/rnaseq \
     --skip_dupradar true \
     --skip_preseq true \
     --skip_salmon false \
-    --skip_featurecounts true \
+    --skip_featurecounts false \
     --save_trimmed true \
     --save_unaligned true \
     --save_intermediates true \

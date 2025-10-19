@@ -19,8 +19,7 @@
 #
 # Usage: sbatch scripts/03_rnaseq_pipeline/03_monitor_and_launch.sh <TEST_JOB_ID>
 #
-# Author: Claude Code
-# Date: October 17, 2025
+# Date: October 18, 2025
 #############################################################################
 
 set -euo pipefail
@@ -96,10 +95,25 @@ check_pipeline_success() {
 
     # Check if gene counts are non-zero (critical check!)
     local gene_count=$(wc -l < "${salmon_dir}/salmon.merged.gene_counts.tsv")
-    echo "Gene count file has ${gene_count} lines"
+    echo "Salmon gene count file has ${gene_count} lines"
 
     if [ ${gene_count} -lt 100 ]; then
-        echo "ERROR: Gene count file has too few entries (${gene_count})"
+        echo "ERROR: Salmon gene count file has too few entries (${gene_count})"
+        return 1
+    fi
+
+    # Check if featureCounts completed (NEW - for validation)
+    local featurecounts_file=$(find "${output_dir}/star_salmon" -name "*featureCounts.txt" 2>/dev/null | head -1)
+    if [ -z "${featurecounts_file}" ]; then
+        echo "ERROR: featureCounts output file not found"
+        return 1
+    fi
+
+    local fc_count=$(wc -l < "${featurecounts_file}")
+    echo "featureCounts file has ${fc_count} lines"
+
+    if [ ${fc_count} -lt 100 ]; then
+        echo "ERROR: featureCounts file has too few entries (${fc_count})"
         return 1
     fi
 

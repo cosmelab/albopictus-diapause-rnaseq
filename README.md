@@ -47,18 +47,22 @@ RNA-seq analysis pipeline for validating GWAS-identified candidate genes associa
 ```
 albopictus-diapause-rnaseq/
 ├── data/
-│   ├── raw/                    # FASTQ files by dataset
 │   ├── metadata/               # Sample information and candidate genes
-│   ├── references/             # Genome and annotation files
-│   └── sra/                    # SRA cache files
-├── scripts/                    # Analysis pipeline
-│   ├── 01_download_data/       # SRA data download
-│   ├── 02_run_rnaseq/         # nf-core RNA-seq pipeline
-│   ├── 03_qc_analysis/        # Quality control
-│   ├── 04_differential_expression/ # DESeq2 analysis
-│   └── 05_visualization/      # Publication figures
-├── logs/                      # Job logs
-├── output/                    # Pipeline outputs
+│   ├── references/             # AalbF3 genome and annotation files
+│   ├── collaborator_repos/     # Collaborator's analysis scripts (for comparison)
+│   └── raw/                    # FASTQ files by dataset
+├── scripts/                    # Analysis pipeline (numbered workflow)
+│   ├── 00_reference_preparation/  # Download and prepare reference genome
+│   ├── 01_sra_download/          # SRA data download
+│   ├── 02_annotation_prep/       # Fix GTF annotation for nf-core
+│   ├── 03_rnaseq_pipeline/       # nf-core RNA-seq pipeline
+│   ├── 04_qc_analysis/           # Quality control extraction
+│   ├── 05_count_matrix/          # Combine count matrices
+│   ├── 06_diff_expression/       # DESeq2 differential expression
+│   ├── 07_visualization/         # Publication figures
+│   └── utils/                    # Utility scripts
+├── logs/                      # SLURM job logs
+├── output/                    # Pipeline outputs (44 samples)
 └── albopictus-diapause-rnaseq.sif # Analysis container (1.3GB)
 ```
 
@@ -98,19 +102,29 @@ cd ../..
 
 ### 4. Run Analysis Pipeline
 ```bash
-# Download SRA data (3 datasets in parallel) - requires the .sif container
-sbatch scripts/01_download_data/01_sra_array.sh
+# Download SRA data (44 samples in parallel)
+sbatch --array=1-44 scripts/01_sra_download/01_sra_array.sh
 
-# Run nf-core RNA-seq pipeline - uses nf-core containers
-sbatch scripts/02_run_rnaseq/01_run_rnaseq_array.sh
+# Run nf-core RNA-seq pipeline (completed Oct 17-18, 2025)
+sbatch --array=1-44 scripts/03_rnaseq_pipeline/02_run_rnaseq_array.sh
 ```
 
 ## Analysis Workflow
 
-The current pipeline consists of two main steps:
+**Current Status:** Pipeline complete (Oct 17-18, 2025) - All 44 samples processed successfully!
 
-1. **Data Download**: Retrieve SRA datasets using parallel array jobs
-2. **RNA-seq Processing**: nf-core/rnaseq pipeline with Salmon quantification
+The complete workflow consists of 8 numbered stages:
+
+1. **00_reference_preparation**: Download AalbF3 genome from Dryad, prepare rRNA database
+2. **01_sra_download**: Download 44 FASTQ samples from SRA (3 datasets)
+3. **02_annotation_prep**: Fix GTF annotation (remove 45 problematic transcripts, add gene_biotype)
+4. **03_rnaseq_pipeline**: nf-core/rnaseq with STAR alignment + Salmon quantification
+5. **04_qc_analysis**: Extract QC metrics, run featureCounts for validation (IN PROGRESS)
+6. **05_count_matrix**: Combine count matrices across samples
+7. **06_diff_expression**: DESeq2 analysis per dataset + meta-analysis
+8. **07_visualization**: Generate publication figures
+
+**Next Step:** Run featureCounts on existing BAM files to validate Salmon results
 
 ## Key Tools
 
@@ -123,9 +137,14 @@ The current pipeline consists of two main steps:
 
 ## Documentation
 
-- **[workflow.md](workflow.md)**: Detailed analysis pipeline
-- **[project_rules.md](project_rules.md)**: Analysis strategy and statistical methods
-- **[hpcc_nfcore_install.md](hpcc_nfcore_install.md)**: HPC deployment guide
+- **[project.md](project.md)**: Complete project documentation, status, and analysis strategy
+- **[technical.md](technical.md)**: HPC setup, git hooks, GitHub/Docker Hub integration
+- **[assistant_rules.md](assistant_rules.md)**: AI assistant behavior rules for this project
+
+**See also:**
+- Each `scripts/XX_*/README.md` contains detailed instructions for that workflow step
+- `scripts/00_reference_preparation/README.md` - Reference genome download and preparation
+- `scripts/02_annotation_prep/README.md` - GTF annotation fixes and validation
 
 ## License
 

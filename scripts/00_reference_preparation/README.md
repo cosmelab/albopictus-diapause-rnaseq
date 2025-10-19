@@ -15,7 +15,7 @@ This directory contains scripts for preprocessing the *Aedes albopictus* AalbF3 
 **Repository:** Dryad Digital Repository
 **DOI:** [10.5061/dryad.mgqnk98z4](https://doi.org/10.5061/dryad.mgqnk98z4)
 **URL:** https://datadryad.org/stash/dataset/doi:10.5061/dryad.mgqnk98z4
-**Citation:** Boyle et al. 2021, Insects 12:1-19 (PMID: 33669192); Palatini et al. 2020, BMC Biology (annotation)
+**Citation:** Boyle et al. 2021, Insects 12:1-19 (PMID: 33669192); Palatini et al. 2020, BMC Biology (annotation lifted)
 **Assembly:** GCA_018104305.1 (AalbF3 - linkage-based chromosome-level assembly)
 
 ### Files to Download from Dryad
