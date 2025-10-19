@@ -1184,10 +1184,25 @@ Each directory contains a `README.md` with:
 ## TODO LIST
 
 ### Immediate (October 2025)
-- [ ] Test cleaned GTF with nf-core on single sample
-- [ ] Verify gene detection no longer shows zeros
-- [ ] If test passes, run full array for all 44 samples
-- [ ] Extract QC metrics from new run
+- [x] Fix executor config (local → slurm)
+- [x] Run pipeline with correct single orchestrator approach
+- [x] Enable both Salmon and featureCounts for validation
+- [ ] Monitor pipeline completion (Job 20487198, deadline 4am Oct 19 before network maintenance)
+- [ ] Test reproducibility on Yale HPC
+- [ ] Extract QC metrics from completed run
+
+### Data Management & Reproducibility
+- [ ] Create automated script to download AalbF3 genome from Dryad
+  - Script should download genome, annotation, and verify checksums
+  - Should be part of `scripts/00_reference_preparation/`
+  - Removes manual download dependency
+- [ ] Prepare Zenodo reproducibility package
+  - Include: References (434 MB), metadata (20 KB), fixed GTF
+  - Link to GitHub repo for scripts
+  - Instructions for downloading FASTQ from SRA
+  - Document complete workflow from raw data to results
+- [ ] Test complete workflow on Yale HPC for reproducibility validation
+- [ ] Document any HPC-specific configuration differences (UCR vs Yale)
 
 ### QC Analysis
 - [ ] Fix gene count detection in QC extraction script
