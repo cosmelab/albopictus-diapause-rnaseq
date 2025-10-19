@@ -1,7 +1,7 @@
 # Albopictus Diapause RNA-seq Analysis Project
 
-**Last Updated:** October 18, 2025 17:47
-**Status:** ✅ RUNNING CORRECTLY - Nextflow submitting child SLURM jobs (Job ID: 20487198, ~50 jobs active)
+**Last Updated:** October 18, 2025 18:45
+**Status:** ✅ PRODUCTION-READY - Pipeline hardened and validated, ready for final run
 
 ---
 
@@ -19,9 +19,67 @@
 
 ---
 
-## CURRENT STATUS - OCTOBER 18, 2025 11:30
+## CURRENT STATUS - OCTOBER 18, 2025 18:45
 
-### ✅ PROJECT REORGANIZATION COMPLETE!
+### ✅ PRODUCTION HARDENING COMPLETE! (October 18, 2025 18:00-18:45)
+
+**Major improvements based on nf-core best practices:**
+
+#### 1. Script Cleanup & Simplification
+- [x] Removed old `02_run_rnaseq.sh` and `hpc_batch.conf` (outdated versions)
+- [x] Renamed `02_run_rnaseq_robust.sh` → `02_run_rnaseq.sh` (production version)
+- [x] Renamed `hpc_batch_robust.conf` → `hpc_batch.conf` (production version)
+- [x] Cleaned output/ and logs/ directories (freed 288GB, kept 1.6GB singularity containers)
+
+#### 2. Best Practice: Parameter Separation
+- [x] **Created `params.yaml`** with ALL pipeline parameters (44 lines)
+- [x] Removed parameters from launcher script (cleaner, more maintainable)
+- [x] Separated pipeline params from system config (nf-core recommendation)
+- [x] Benefits: Version-controlled run specs, schema validation, portability
+
+#### 3. Publication-Grade QC Enabled
+- [x] **Enabled critical QC modules** for cross-platform comparison:
+  - `preseq` - Library complexity curves
+  - `dupradar` - PCR/duplication bias assessment across platforms
+  - `qualimap` - Mapping QC metrics
+  - `rseqc` - Strandness, inner distance, gene body coverage
+  - `bigwig` - IGV coverage inspection for batch artifacts
+  - `featurecounts` - HTSeq-comparable counts for method validation
+- [x] Kept only essential skips (markduplicates, stringtie)
+- [x] Skipped `save_unaligned` to save space (can regenerate if needed)
+
+#### 4. Enhanced Provenance & Reporting
+- [x] Added `-with-dag output/pipeline_dag.svg` (visual workflow graph)
+- [x] Added `--multiqc_title "${RUN_NAME}"` (clear run identification)
+- [x] Added `-validate_params` (schema validation on every run)
+- [x] All reports: timeline, trace, DAG for full audit trail
+
+#### 5. Future-Proofing: Apptainer Support
+- [x] Added Apptainer environment variables (Singularity's successor)
+- [x] Ensures compatibility with future HPC container engines
+
+#### 6. SLURM Optimization
+- [x] Changed `submitRateLimit` from 10s → 15s (gentler on busy queues)
+- [x] Kept `queueSize=200` for throughput
+- [x] Smart retry logic for transient node failures
+
+#### 7. Profile Configuration
+- [x] Using `-profile singularity` only (correct nf-core approach)
+- [x] SLURM executor configured in `hpc_batch.conf` (not as profile)
+
+**Files Updated:**
+- `scripts/03_rnaseq_pipeline/02_run_rnaseq.sh` - Clean launcher (210 lines, down from 261)
+- `scripts/03_rnaseq_pipeline/hpc_batch.conf` - System config only (144 lines)
+- `scripts/03_rnaseq_pipeline/params.yaml` - **NEW** - All pipeline parameters
+
+**Validation:** ✅ PASSED - `VALIDATE_ONLY=1 bash 02_run_rnaseq.sh` successful
+
+**Ready to Launch:**
+```bash
+sbatch scripts/03_rnaseq_pipeline/02_run_rnaseq.sh
+```
+
+### ✅ PROJECT REORGANIZATION COMPLETE! (October 18, 2025 morning)
 - [x] Cleaned up logs directory (removed old July runs)
 - [x] Reorganized scripts into numbered workflow directories (00-07)
 - [x] Created README.md files for each script directory

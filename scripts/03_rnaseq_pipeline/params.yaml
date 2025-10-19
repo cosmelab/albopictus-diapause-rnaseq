@@ -1,0 +1,44 @@
+# nf-core/rnaseq run parameters (locked for reproducibility)
+# Date: October 18, 2025
+
+# I/O
+input: data/metadata/samplesheet.csv
+outdir: output
+
+# References
+fasta: data/references/AalbF3_genome/AalbF3_genome.fa.gz
+gtf: data/references/AalbF3_genome/AalbF3_annotation.gtf.gz
+
+# Aligner and quantification
+aligner: star_salmon
+save_reference: true
+
+# rRNA removal
+remove_ribo_rna: true
+ribo_database_manifest: data/references/AalbF3_genome/rrna_db_manifest.txt
+
+# Skip modules (minimal for publication-grade QC)
+skip_markduplicates: true  # No UMIs, not needed
+skip_stringtie: true       # No transcript assembly needed
+skip_fq_lint: true         # Already validated
+skip_deseq2_qc: true       # Will do custom DESeq2 analysis
+
+# Keep these QC modules (critical for cross-platform comparison)
+skip_bigwig: false         # Keep for IGV coverage inspection and batch artifacts
+skip_dupradar: false       # Keep to assess PCR/duplication bias across platforms
+skip_preseq: false         # Keep library complexity curves for cross-experiment comparison
+skip_qualimap: false       # Keep for mapping QC
+skip_rseqc: false          # Keep for strandness, inner distance, gene body coverage
+
+# Quantification methods (keep both for validation)
+skip_salmon: false         # Primary quantification method
+skip_featurecounts: false  # For HTSeq-comparable counts and method validation
+
+# Save intermediate files
+save_trimmed: true
+save_unaligned: false      # Skip to save space (can regenerate if needed)
+
+# Global resource caps
+max_cpus: 128
+max_memory: 500.GB
+max_time: 72.h

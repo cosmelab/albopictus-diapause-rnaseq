@@ -98,6 +98,47 @@ python scripts/03_rnaseq_pipeline/01_create_samplesheet.py
 - Singularity containerization
 - Proper caching and resume functionality
 
+**Status:** ✅ Currently running (Job 20487198)
+
+---
+
+### 02_run_rnaseq_robust.sh
+
+**Purpose:** Production-hardened launcher with all robustness and reproducibility improvements.
+
+**Key Improvements Over Standard Version:**
+- **Version Pinning:** Pipeline version locked as variable, run tagged with date
+- **Profile Integration:** Uses `-profile slurm,singularity` for native SLURM executor
+- **Reduced Orchestrator:** 2 CPUs, 8GB RAM (cheaper, child jobs get their own resources)
+- **Explicit Paths:** `-work-dir` specified to prevent cache mixing across runs
+- **Isolated Environments:** Dedicated temp/cache dirs prevent cross-user/run conflicts
+- **Validation Mode:** `VALIDATE_ONLY=1` dry-run checks params before spending cluster time
+- **Boolean Idiom:** Uses presence/absence instead of `=true/=false` (nf-core standard)
+- **Exit Traps:** Captures success/failure status with timestamps for audit trails
+- **Provenance Logging:** Records Nextflow version, paths, run metadata
+- **Deterministic Permissions:** `umask 0022` ensures outputs readable across users
+- **Bounded Resources:** JVM heap limits, controlled temp space prevent OOM/disk fills
+
+**When to Use:**
+- **New runs** on different HPCs (Yale, other collaborators)
+- **Publication-quality** runs requiring full audit trail
+- **Production deployments** where reproducibility is critical
+- **Troubleshooting** with validation mode before full execution
+
+**Usage:**
+```bash
+# Validation mode (check params, verify files exist)
+VALIDATE_ONLY=1 sbatch scripts/03_rnaseq_pipeline/02_run_rnaseq_robust.sh
+
+# Full run
+sbatch scripts/03_rnaseq_pipeline/02_run_rnaseq_robust.sh
+```
+
+**Recommended For:**
+- ✅ Yale HPC reproducibility test (tomorrow)
+- ✅ Sharing with collaborators
+- ✅ Future projects using nf-core pipelines
+
 **Pipeline Configuration:**
 
 **Reference Files:**
