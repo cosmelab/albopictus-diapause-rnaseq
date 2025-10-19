@@ -2,7 +2,7 @@
 
 **Purpose:** Run nf-core/rnaseq pipeline for quantification of all 44 samples.
 
-**Status:** ✅ Completed (October 17-18, 2025)
+**Status:** 🔄 Re-running (October 18, 2025) - Added featureCounts validation + fixed parallel execution conflicts
 
 ---
 
@@ -19,6 +19,65 @@ This directory contains scripts for running the nf-core/rnaseq v3.19.0 pipeline 
 - Failed samples don't affect others
 - Easy to re-run individual samples
 - Clear per-sample logs and outputs
+
+### Two Execution Strategies
+
+**Option 1: Test-Then-Launch (Conservative, Recommended)**
+```bash
+# Submit test job (sample 1)
+sbatch --array=1 scripts/03_rnaseq_pipeline/02_run_rnaseq_array.sh
+
+# Use monitor script to validate and auto-launch remaining samples
+sbatch scripts/03_rnaseq_pipeline/03_monitor_and_launch.sh <TEST_JOB_ID>
+```
+- **Use when:** First time running, testing new parameters, or validating pipeline changes
+- **Benefit:** Catches errors early before wasting resources on all 44 samples
+- **Time:** Adds ~2-4 hours for test + validation
+
+**Option 2: Run All At Once (Fast, Time-Constrained)**
+```bash
+# Submit all 44 samples immediately
+sbatch --array=1-44 scripts/03_rnaseq_pipeline/02_run_rnaseq_array.sh
+```
+- **Use when:** Confident in configuration, time-constrained, or re-running with known-good parameters
+- **Benefit:** Saves 2-4 hours by skipping test phase
+- **Risk:** If configuration wrong, wastes resources on all samples
+- **Current run (Oct 18):** Using this approach due to Christmas deadline
+
+### Parallel Execution Fix (October 18, 2025)
+
+**Problem Discovered:**
+When running all 44 samples in parallel, Nextflow instances conflicted on shared directories:
+- All jobs tried to lock same `.nextflow/cache/` directory → lock file errors
+- All jobs wrote to same `.nextflow.log` in project root → file conflicts
+
+**Solution Implemented:**
+Each array task now gets completely isolated directories:
+
+1. **Unique Nextflow home per task:**
+   ```bash
+   export NXF_HOME="${PROJECT_BASE}/output/nf-home-${SLURM_ARRAY_TASK_ID}"
+   ```
+   - Task 1 → `output/nf-home-1/.nextflow/`
+   - Task 2 → `output/nf-home-2/.nextflow/`
+   - Prevents lock file conflicts
+
+2. **Unique working directory per task:**
+   ```bash
+   TASK_WORK_DIR="${PROJECT_BASE}/output/task-${SLURM_ARRAY_TASK_ID}"
+   cd "${TASK_WORK_DIR}"
+   ```
+   - Task 1 cd's to `output/task-1/` → creates `.nextflow.log` there
+   - Task 2 cd's to `output/task-2/` → creates `.nextflow.log` there
+   - Prevents log file conflicts
+
+3. **All paths made absolute:**
+   - Since tasks no longer run from project root, all paths use `${PROJECT_BASE}/`
+
+**Resume Still Works:**
+- Each task's `SLURM_ARRAY_TASK_ID` is consistent across re-runs
+- Task 5 always uses `output/task-5/` and `output/nf-home-5/`
+- Resume finds the same cache directory automatically
 
 ---
 
@@ -74,10 +133,11 @@ RRNA_MANIFEST="data/references/AalbF3_genome/rrna_db_manifest.txt"
 - `--skip_markduplicates true` - Skip duplicate marking (RNA-seq)
 - `--skip_bigwig true` - Skip BigWig generation (large files)
 - `--skip_stringtie true` - Skip transcript assembly
-- `--skip_salmon false` - Keep Salmon quantification (main method)
-- `--skip_featurecounts true` - Skip featureCounts (using Salmon)
+- `--skip_salmon false` - **Salmon quantification (primary method)**
+- `--skip_featurecounts false` - **featureCounts enabled for validation**
 - `--save_trimmed true` - Save trimmed FASTQ for QC
 - `--save_unaligned true` - Save unaligned reads for troubleshooting
+- `-resume` - Resume from cache if available (safe to include always)
 
 **Important:** Configuration file `hpc_batch.conf` contains HPC-specific settings.
 
@@ -115,12 +175,17 @@ sbatch --array=1-44 scripts/03_rnaseq_pipeline/02_run_rnaseq_array.sh
 
 **Key Validation Checks:**
 ```bash
-# Check gene counts file
+# Check Salmon gene counts file
 output/PRJNA158021/SRR458462/star_salmon/salmon.merged.gene_counts.tsv
+# Expected: ~20,000-25,000 genes
 
-# Expected: ~20,000-25,000 genes detected
+# Check featureCounts output (NEW - for validation)
+output/PRJNA158021/SRR458462/star_salmon/*featureCounts.txt
+# Expected: ~20,000-25,000 genes
+
+# Both methods should detect similar gene counts
 # Previous runs with wrong GTF: 0 genes (FAILURE)
-# Current run with fixed GTF: 22,176 genes (SUCCESS)
+# Successful run: 22,176 genes (SUCCESS)
 ```
 
 **Usage:**

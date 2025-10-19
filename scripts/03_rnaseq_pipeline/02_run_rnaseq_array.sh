@@ -18,7 +18,7 @@ PROJECT_BASE="/bigdata/cosmelab/lcosme/projects/albopictus-diapause-rnaseq"
 # Set up environment
 export CONDA_PKGS_DIRS="/bigdata/cosmelab/lcosme/conda/pkgs"
 export CONDA_ENVS_PATH="/bigdata/cosmelab/lcosme/conda/envs"
-export NXF_HOME="/bigdata/cosmelab/lcosme/.nextflow"
+export NXF_HOME="${PROJECT_BASE}/output/nf-home-${SLURM_ARRAY_TASK_ID}"
 export NXF_WORK="${PROJECT_BASE}/output/nf-work"
 export NXF_TEMP="${PROJECT_BASE}/output/nf-temp"
 export NXF_OPTS="-Xms512m -Xmx4g"
@@ -36,12 +36,14 @@ chmod -R 755 $NXF_TEMP
 chmod -R 755 $NXF_SINGULARITY_CACHEDIR
 chmod -R 755 $SINGULARITY_TMPDIR
 
-# Change to project directory
-cd "${PROJECT_BASE}"
+# Create unique work directory for this array task to avoid log conflicts
+TASK_WORK_DIR="${PROJECT_BASE}/output/task-${SLURM_ARRAY_TASK_ID}"
+mkdir -p ${TASK_WORK_DIR}
+cd "${TASK_WORK_DIR}"
 
 # Get the sample name and FASTQ paths for this array task
 # Add 1 to SLURM_ARRAY_TASK_ID to skip the header line
-SAMPLE_LINE=$(sed -n "$((SLURM_ARRAY_TASK_ID + 1))p" data/metadata/samplesheet.csv)
+SAMPLE_LINE=$(sed -n "$((SLURM_ARRAY_TASK_ID + 1))p" ${PROJECT_BASE}/data/metadata/samplesheet.csv)
 SAMPLE=$(echo "$SAMPLE_LINE" | cut -d',' -f1)
 FASTQ1=$(echo "$SAMPLE_LINE" | cut -d',' -f2)
 FASTQ2=$(echo "$SAMPLE_LINE" | cut -d',' -f3)
@@ -61,9 +63,9 @@ echo "FASTQ1: $FASTQ1"
 echo "FASTQ2: $FASTQ2"
 
 # Create a temporary samplesheet with just this sample in output directory
-mkdir -p output/temp_samplesheets
-echo "sample,fastq_1,fastq_2,strandedness" > output/temp_samplesheets/samplesheet_${SLURM_ARRAY_TASK_ID}.csv
-echo "$SAMPLE_LINE" >> output/temp_samplesheets/samplesheet_${SLURM_ARRAY_TASK_ID}.csv
+mkdir -p ${PROJECT_BASE}/output/temp_samplesheets
+echo "sample,fastq_1,fastq_2,strandedness" > ${PROJECT_BASE}/output/temp_samplesheets/samplesheet_${SLURM_ARRAY_TASK_ID}.csv
+echo "$SAMPLE_LINE" >> ${PROJECT_BASE}/output/temp_samplesheets/samplesheet_${SLURM_ARRAY_TASK_ID}.csv
 
 # Check if FASTQ files exist
 if [ ! -f "$FASTQ1" ]; then
@@ -77,9 +79,9 @@ if [ ! -f "$FASTQ2" ]; then
 fi
 
 # Check if reference files exist
-FASTA="data/references/AalbF3_genome/AalbF3_genome.fa.gz"
-GTF="data/references/AalbF3_genome/AalbF3_annotation.gtf.gz"
-RRNA_MANIFEST="data/references/AalbF3_genome/rrna_db_manifest.txt"
+FASTA="${PROJECT_BASE}/data/references/AalbF3_genome/AalbF3_genome.fa.gz"
+GTF="${PROJECT_BASE}/data/references/AalbF3_genome/AalbF3_annotation.gtf.gz"
+RRNA_MANIFEST="${PROJECT_BASE}/data/references/AalbF3_genome/rrna_db_manifest.txt"
 
 if [ ! -f "$FASTA" ]; then
     echo "Error: FASTA file not found: $FASTA"
@@ -97,16 +99,16 @@ if [ ! -f "$RRNA_MANIFEST" ]; then
 fi
 
 # Create project directory structure
-mkdir -p output/${PROJECT}
+mkdir -p ${PROJECT_BASE}/output/${PROJECT}
 
 # Run the pipeline for this sample
 nextflow run nf-core/rnaseq \
     -r 3.19.0 \
     -profile singularity \
-    -c scripts/03_rnaseq_pipeline/hpc_batch.conf \
+    -c ${PROJECT_BASE}/scripts/03_rnaseq_pipeline/hpc_batch.conf \
     -resume \
-    --input output/temp_samplesheets/samplesheet_${SLURM_ARRAY_TASK_ID}.csv \
-    --outdir output/${PROJECT}/${SAMPLE_ID} \
+    --input ${PROJECT_BASE}/output/temp_samplesheets/samplesheet_${SLURM_ARRAY_TASK_ID}.csv \
+    --outdir ${PROJECT_BASE}/output/${PROJECT}/${SAMPLE_ID} \
     --fasta "$FASTA" \
     --gtf "$GTF" \
     --remove_ribo_rna \
@@ -133,18 +135,18 @@ nextflow run nf-core/rnaseq \
     -name "${RUN_ID}"
 
 # Check if pipeline completed successfully
-if [ $? -eq 0 ] && [ -d "output/${PROJECT}/${SAMPLE_ID}" ]; then
+if [ $? -eq 0 ] && [ -d "${PROJECT_BASE}/output/${PROJECT}/${SAMPLE_ID}" ]; then
     echo "Pipeline completed successfully for sample ${SAMPLE_ID}"
-    
+
     # Create logs directory if it doesn't exist
     mkdir -p ${PROJECT_BASE}/logs/samplesheets
-    
+
     # Move the samplesheet to logs directory with timestamp
-    mv output/temp_samplesheets/samplesheet_${SLURM_ARRAY_TASK_ID}.csv ${PROJECT_BASE}/logs/samplesheets/${SAMPLE_ID}_${RUN_ID}.csv
+    mv ${PROJECT_BASE}/output/temp_samplesheets/samplesheet_${SLURM_ARRAY_TASK_ID}.csv ${PROJECT_BASE}/logs/samplesheets/${SAMPLE_ID}_${RUN_ID}.csv
 else
     echo "Pipeline failed or output directory not found. Check the logs for details."
     # Move the samplesheet to logs directory even if pipeline fails
     mkdir -p ${PROJECT_BASE}/logs/samplesheets
-    mv output/temp_samplesheets/samplesheet_${SLURM_ARRAY_TASK_ID}.csv ${PROJECT_BASE}/logs/samplesheets/${SAMPLE_ID}_${RUN_ID}_FAILED.csv
+    mv ${PROJECT_BASE}/output/temp_samplesheets/samplesheet_${SLURM_ARRAY_TASK_ID}.csv ${PROJECT_BASE}/logs/samplesheets/${SAMPLE_ID}_${RUN_ID}_FAILED.csv
     exit 1
 fi

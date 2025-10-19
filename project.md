@@ -1,7 +1,7 @@
 # Albopictus Diapause RNA-seq Analysis Project
 
-**Last Updated:** October 18, 2025 16:45
-**Status:** ⚠️ READY TO RE-RUN - Previous cache cleared, pipeline will run from scratch with featureCounts enabled
+**Last Updated:** October 18, 2025 17:19
+**Status:** 🏃 RUNNING - All 44 samples submitted with featureCounts + Salmon validation (Run 4, Job ID: 20486713)
 
 ---
 
@@ -28,17 +28,17 @@
 - [x] Updated all script cross-dependencies
 - [x] Following bioinformatics best practices for reproducibility
 
-### ✅ ALL 44 SAMPLES COMPLETED! ✓
+### 🏃 RUN 4 IN PROGRESS - featureCounts Validation
 - [x] Downloaded correct AalbF3 genome from Dryad (GCA_018104305.1)
 - [x] Fixed chromosome naming (stripped "chr" prefix to match SNP chip format)
 - [x] Downloaded 12 Ae. albopictus rRNA sequences for SortMeRNA
 - [x] Created GTF with proper gene_id attributes for RSEM compatibility
 - [x] Filtered 45 problematic transcripts (multi-chromosome/inconsistent strands)
 - [x] **FIXED GTF newline bug** - regenerated GTF with proper formatting
-- [x] Updated pipeline script to use new references and rRNA removal
-- [x] Cleaned up 2TB of old cache files
-- [x] **DOCUMENTED ALL ANNOTATION PROBLEMS FOR MANUSCRIPT METHODS**
-- [x] **TEST JOB SUBMITTED AND RUNNING** (Job 20467416)
+- [x] Run 1-3 completed with Salmon only (forgot featureCounts)
+- [x] **ENABLED featureCounts** for method validation
+- [x] **FIXED parallel execution conflicts** - isolated NXF_HOME and working directories per task
+- [x] **ALL 44 SAMPLES SUBMITTED** (Job 20486713, started October 18, 2025 17:19)
 
 ### Latest Fix (October 17, 2025 16:00)
 **Problem**: GTF file had literal "\n" characters instead of actual newlines
@@ -86,6 +86,62 @@ ls -d output/PRJNA*/SRR*/star_salmon/ | wc -l
 grep -i "error" logs/successful_runs/20241017_full_pipeline/rnaseq_*.o.txt
 # No critical errors found ✓
 ```
+
+### Run 4: featureCounts Validation + Parallel Execution Fix (October 18, 2025)
+
+**Why Re-running:**
+- Validation strategy requires BOTH Salmon AND featureCounts to compare methods
+- Original runs had `--skip_featurecounts true` (forgot to enable it)
+- Need both quantification methods on same data (AalbF3 genome) to isolate method differences from genome differences
+
+**Technical Issues Discovered:**
+When attempting to run all 44 samples in parallel, Nextflow instances conflicted on shared directories:
+
+**Problem 1: Lock file conflicts**
+- All jobs tried to lock same `.nextflow/cache/` directory
+- Error: "Unable to acquire lock on session with ID..."
+- Cause: Shared `NXF_HOME` directory
+
+**Problem 2: Log file conflicts**
+- All jobs wrote to same `.nextflow.log` in project root
+- Caused file corruption and job failures
+
+**Solution Implemented:**
+Each array task now gets completely isolated directories:
+
+1. Unique Nextflow home per task:
+   ```bash
+   export NXF_HOME="${PROJECT_BASE}/output/nf-home-${SLURM_ARRAY_TASK_ID}"
+   ```
+   - Task 1 → `output/nf-home-1/.nextflow/`
+   - Task 2 → `output/nf-home-2/.nextflow/`
+
+2. Unique working directory per task:
+   ```bash
+   TASK_WORK_DIR="${PROJECT_BASE}/output/task-${SLURM_ARRAY_TASK_ID}"
+   cd "${TASK_WORK_DIR}"
+   ```
+   - Each task cd's to its own directory
+   - Creates `.nextflow.log` there instead of project root
+
+3. All paths made absolute using `${PROJECT_BASE}/`
+
+**Resume Still Works:**
+- Each task's `SLURM_ARRAY_TASK_ID` is consistent across re-runs
+- Task 5 always uses same directories: `output/task-5/` and `output/nf-home-5/`
+
+**Configuration Changes:**
+- Line 124: `--skip_featurecounts false` (was `true`)
+- Line 107: `-resume` flag added (safe to include always)
+- Line 106: `-r 3.19.0` version pinned (HPC has Nextflow 24.07.0, incompatible with nf-core 3.21.0)
+
+**Execution Decision:**
+- Skipped test-then-launch approach to save time (Christmas deadline)
+- Submitted all 44 samples immediately: `sbatch --array=1-44`
+- Risk: If configuration wrong, wastes resources on all samples
+- Confidence: High - same configuration that worked in Run 3, just added one parameter
+
+**Status:** Running (started October 18, 2025 17:XX)
 
 ### Automated Pipeline Launch (NEW!)
 Created monitoring script that will:
