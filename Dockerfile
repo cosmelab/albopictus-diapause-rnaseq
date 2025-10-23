@@ -115,10 +115,17 @@ RUN --mount=type=cache,target=/opt/conda/pkgs \
     -y && micromamba clean --all --yes
 
 # Install R base and Bioconductor packages (conda-forge + bioconda)
+# Order: r-base first, then R packages from conda, then bioconductor, then tools
 RUN --mount=type=cache,target=/opt/conda/pkgs \
     micromamba install --channel-priority strict -c conda-forge -c bioconda \
     r-base \
+    r-pheatmap \
+    r-reshape2 \
+    r-viridis \
     bioconductor-deseq2 \
+    bioconductor-apeglm \
+    bioconductor-enhancedvolcano \
+    bioconductor-mygene \
     bioconductor-tximport \
     bioconductor-annotationdbi \
     bioconductor-biomart \
@@ -144,8 +151,9 @@ RUN pip3 install --no-cache-dir \
     biopython \
     scikit-learn
 
-# Install ALL R packages in a single layer
-RUN R -e "install.packages(c('here', 'data.table', 'metafor', 'tidyverse', 'ggplot2', 'qqman', 'qqplotr', 'reticulate', 'broom', 'readxl', 'writexl', 'knitr', 'rmarkdown'), repos='https://cloud.r-project.org/', Ncpus=4)"
+# Install remaining R packages from CRAN (packages not available in conda-forge/bioconda)
+# Note: pheatmap, reshape2, viridis already installed via conda above
+RUN R -e "install.packages(c('here', 'data.table', 'metafor', 'tidyverse', 'ggplot2', 'qqman', 'qqplotr', 'reticulate', 'broom', 'readxl', 'writexl', 'knitr', 'rmarkdown', 'GOplot'), repos='https://cloud.r-project.org/', Ncpus=4)"
 
 # Install and configure shell environment in a single layer
 RUN git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh && \
