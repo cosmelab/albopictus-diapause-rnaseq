@@ -1,6 +1,23 @@
 # Session Tracking - Current Work
 
-**Last Updated:** Oct 22, 2025 16:30
+**Last Updated:** Oct 23, 2025 18:45
+
+---
+
+## QUICK START GUIDE
+
+**When resuming work, read these files in order:**
+
+1. **THIS FILE (session_tracking.md)** - Current status, what's running, next steps
+2. **assistant_rules.md** - Rules to follow (container-only, no caps in filenames, etc.)
+3. **project.md** - Full project context, goals, samples, GWAS candidates
+4. **stage_specific_analysis_roadmap.md** - Analysis strategy for each developmental stage
+5. **technical.md** - HPC setup, container info, GitHub/Docker setup
+
+**Current Status:**
+- Pipeline Job 20644937 running (started 18:09, ~2-3 hours)
+- Scripts cleaned up, committed (f758c74)
+- Container rebuilding with rdryad
 
 ---
 
@@ -137,7 +154,7 @@ We have 3 experiments. We ran nf-core/rnaseq and got:
 **Embryos:** Not created yet (need 72h and 135h separate analyses)
 **Larvae:** Not created yet (need 11d, 21d, 40d separate analyses)
 
-### PIPELINE RE-RUN STATUS (Oct 23, 2025)
+### PIPELINE RE-RUN STATUS (Oct 23, 2025 - 18:40)
 
 **THE ACTUAL PROBLEM (VERIFIED):**
 - Oct 18 run used: `-g gene_biotype` in featureCounts
@@ -145,26 +162,40 @@ We have 3 experiments. We ran nf-core/rnaseq and got:
 - Result: ~10 biotype categories instead of 22,176 individual gene counts
 - **PROOF:** `/bigdata/.../output/nf-work/00/bf2f02386ad32b8f20d50a6737507b/.command.sh` line 3
 
-**Job Running:** 20644924 (started 18:05)
+**Job 20644937 RUNNING (started 18:09, running 29+ minutes)**
 - **FIXED PARAMETER:** `featurecounts_group_type: gene_id` in params.yaml
 - **References:** Using same files that worked Oct 18
   - FASTA: data/references/AalbF3/AalbF3_genome.fa.gz
   - GTF: data/references/AalbF3/AalbF3_annotation.gtf.gz
   - rRNA: data/references/AalbF3/combined_rRNA_sequences.fa
-- **STATUS:** Pipeline starting with -resume (will reuse trimmed reads and alignments)
-- **Expected completion:** ~48-72 hours
+- **STATUS:** Pipeline running with -resume
+  - ✅ Reusing trimmed reads (cached)
+  - ✅ Reusing QC (cached)
+  - 🔄 STAR genome generation in progress
+  - Will re-run: featureCounts with correct parameter, then merge results
+- **Expected completion:** ~2-3 hours (not 48-72 because -resume works)
 
-### IMMEDIATE NEXT STEPS (Step 1: Replicate Collaborators)
+### IMMEDIATE NEXT STEPS (when pipeline completes)
 
-1. ✅ Document collaborator methods (DONE - all 3 experiments)
-2. ✅ Update Dockerfile with all collaborator packages (DONE)
-3. ✅ Update adult scripts to match Angela's methods (DONE)
-4. ⏳ **NEXT:** Rebuild container (user needs to update GitHub secrets)
-5. Rerun adult analyses with updated container
-6. Create embryo scripts (72h, 135h separately - matching Mackenzie's methods)
-7. Create larvae scripts (11d, 21d, 40d separately - matching Sarah's methods)
-8. *Optional:* Check if collaborators deposited their counts (GEO/SRA/Dryad)
-9. Compare patterns (may not need exact counts comparison)
+**Step 1: Verify Pipeline Outputs**
+1. ⏳ Wait for Job 20644937 to complete (~2-3 hours from 18:09)
+2. ⏳ Check featureCounts files have individual gene counts (not biotypes)
+3. ⏳ Verify gene count: should be ~22,176 genes
+4. ⏳ Check one featureCounts .command.sh to confirm `-g gene_id` was used
+
+**Step 2: Combine Count Matrices**
+5. ⏳ Run: `scripts/04b_count_matrix/01_combine_counts.py`
+6. ⏳ Run: `scripts/04_qc_analysis/08_split_counts_by_stage.py`
+7. ⏳ Run: `scripts/04_qc_analysis/09_split_counts_with_metadata.py`
+
+**Step 3: Replicate Collaborators' DESeq2 Analyses**
+8. ⏳ Adults unfed: `scripts/06_differential_expression/01_adults_deseq2_unfed.R`
+9. ⏳ Adults fed: `scripts/06_differential_expression/02_adults_deseq2_fed.R`
+10. ⏳ Create embryo scripts: 72h and 135h separate (Mackenzie's methods)
+11. ⏳ Create larvae scripts: 11d, 21d, 40d separate (Sarah's methods)
+
+**Step 4: GWAS Enrichment**
+12. ⏳ Run GWAS enrichment analyses for all stages
 
 ### AFTER REPLICATION (Step 2: Reviewer-Recommended Models)
 
@@ -198,10 +229,9 @@ We have 3 experiments. We ran nf-core/rnaseq and got:
 **01_sra_download/** ✅ DONE (3 scripts)
 - Downloaded all 44 SRA samples
 
-**02_annotation_prep/** ❌ DELETE - duplicate of 02_annotation_preprocessing/
-
 **02_annotation_preprocessing/** ✅ DONE (2 scripts)
 - Converted GFF3 to GTF, fixed transcript issues
+- See: scripts/02_annotation_preprocessing/gtf_preprocessing_pipeline.md for details
 
 **03_rnaseq_pipeline/** 🔄 RUNNING
 - Job 20644937 running with corrected featureCounts parameter
@@ -225,15 +255,12 @@ We have 3 experiments. We ran nf-core/rnaseq and got:
 
 **09_method_validation/** ✅ DONE
 
-### Cleanup Commands (run after pipeline completes):
-```bash
-rm -rf scripts/01_data_acquisition/
-rm -rf scripts/02_annotation_prep/
-rm -rf scripts/05_batch_correction/
-rm -rf scripts/06_diff_expression/
-mv scripts/05_count_matrix scripts/04b_count_matrix
-# Clean 04_qc_analysis - keep only 08, 09, 10
-```
+### Cleanup Status: ✅ DONE (Oct 23, 2025)
+- Deleted: scripts/01_data_acquisition/, 02_annotation_prep/, 05_batch_correction/, 06_diff_expression/
+- Renamed: 05_count_matrix/ → 04b_count_matrix/
+- Cleaned 04_qc_analysis/: kept only scripts 08, 09, 10
+- **Committed and pushed** (commit f758c74)
+- **GitHub Actions building new container with rdryad**
 
 ---
 
@@ -306,53 +333,50 @@ Before doing ANYTHING:
 
 ---
 
-## CRITICAL ISSUE FOUND (Oct 23, 2025)
+## CURRENT SESSION SUMMARY (Oct 23, 2025)
 
-### THE PROBLEM:
-1. **Wrong GTF used**: Only protein-coding genes (15,542), missing:
-   - 153 rRNA genes (can't measure contamination!)
-   - 3,894 lncRNA genes (8 are GWAS candidates!)
-   - 869 tRNA genes
+### What Happened Today:
 
-2. **Wrong featureCounts parameter**: Used `-g gene_biotype` instead of `-g gene_id`
-   - Result: Collapsed all genes into ~10 biotype categories
-   - We need: Individual counts for 20,621 genes
+1. **Identified featureCounts problem** ✅
+   - Oct 18 run used `-g gene_biotype` instead of `-g gene_id`
+   - Result: Got biotype groups instead of individual gene counts
+   - Verified in: `/output/nf-work/00/bf2f02386ad32b8f20d50a6737507b/.command.sh` line 3
 
-### WHAT WAS FIXED:
-1. ✅ Created complete GTF: `/data/references/AalbF3/AalbF3_all_gene_types.gtf`
-2. ✅ Updated `scripts/03_rnaseq_pipeline/params.yaml`:
-   - Points to complete GTF
-   - Added `featurecounts_group_type: gene_id`
-3. ✅ Cleaned up references (one directory: `/data/references/AalbF3/`)
+2. **Fixed configuration** ✅
+   - Updated `params.yaml`: `featurecounts_group_type: gene_id`
+   - Using correct reference files (same ones that worked Oct 18)
 
-### IMMEDIATE TODO (IN ORDER):
+3. **Cleaned up project** ✅
+   - Deleted obsolete script directories
+   - Cleaned 04_qc_analysis (kept only 08, 09, 10)
+   - Updated .gitignore (ignore all data/references/)
+   - Committed and pushed (commit f758c74)
 
-1. [ ] **Re-run nf-core pipeline with fixed params**
-   ```bash
-   cd /bigdata/cosmelab/lcosme/projects/albopictus-diapause-rnaseq
-   sbatch scripts/03_rnaseq_pipeline/02_run_rnaseq.sh
-   ```
-   - Will take ~72 hours
-   - Will generate proper counts for ALL 20,621 genes
+4. **Added rdryad for automated downloads** ✅
+   - Added rdryad R package to Dockerfile
+   - GitHub Actions building new container
+   - Test script: `scripts/01_data_acquisition/download_dryad_genome.py` gets 403
+   - Solution: Use rdryad R package when container ready
 
-2. [ ] **After pipeline completes, verify outputs:**
-   - Check featureCounts has gene-level counts (not biotypes)
-   - Check Salmon counts include all genes
-   - Verify rRNA contamination metrics are calculated
+5. **Pipeline re-running** 🔄
+   - Job 20644937 started 18:09
+   - Using -resume (reusing trimmed reads, QC)
+   - Only re-running: STAR alignment, featureCounts with correct param
+   - Expected completion: ~2-3 hours
 
-3. [ ] **Create count matrices for DESeq2:**
-   - Split by stage (adults, embryos, larvae)
-   - Ensure integer counts
-   - Match sample names to metadata
+### What's Next (when you return):
 
-4. [ ] **Replicate collaborator analyses (Step 1)**
-   - Adults: Split by blood meal status
-   - Embryos: Split by timepoint (72h, 135h)
-   - Larvae: Split by timepoint (11d, 21d, 40d)
-   - Use their exact DESeq2 parameters
+**Check pipeline completion:**
+```bash
+squeue -j 20644937
+tail -50 logs/rnaseq_main_20644937.o.txt
+```
 
-5. [ ] **Run proper statistical models (Step 2)**
-   - Account for all variables
-   - Compare HTSeq vs Salmon
+**Verify featureCounts is correct:**
+```bash
+# Should see individual genes, not biotypes
+head output/star_salmon/featurecounts/PRJNA268379_SRR1663709.featureCounts.tsv
+wc -l output/star_salmon/salmon.merged.gene_counts.tsv  # Should be ~22,176
+```
 
-6. [ ] **Address reviewer concerns (Step 3)**
+**Then start DESeq2 analyses** (see IMMEDIATE NEXT STEPS section above)
