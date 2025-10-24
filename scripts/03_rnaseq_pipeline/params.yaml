@@ -5,17 +5,20 @@
 input: data/metadata/samplesheet.csv
 outdir: output
 
-# References
-fasta: data/references/AalbF3_genome/AalbF3_genome.fa.gz
-gtf: data/references/AalbF3_genome/AalbF3_annotation.gtf.gz
+# References - Same files that worked on Oct 18
+fasta: data/references/AalbF3/AalbF3_genome.fa.gz
+gtf: data/references/AalbF3/AalbF3_annotation.gtf.gz
 
 # Aligner and quantification
 aligner: star_salmon
 save_reference: true
 
+# CRITICAL FIX: Use gene_id for featureCounts (not gene_biotype)
+featurecounts_group_type: gene_id
+
 # rRNA removal
 remove_ribo_rna: true
-ribo_database_manifest: data/references/AalbF3_genome/rrna_db_manifest.txt
+ribo_database_manifest: data/references/AalbF3/rrna_db_manifest.txt
 
 # Skip modules (minimal for publication-grade QC)
 skip_markduplicates: true  # No UMIs, not needed

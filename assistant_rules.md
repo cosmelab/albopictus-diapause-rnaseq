@@ -67,6 +67,30 @@ Read this file first before any action.
 29. Never modify .gitignore or other git configuration files without permission
 30. Always verify paths and configurations before making changes
 
+## Bioinformatics/HPC Specific
+
+31. Never declare technical limitations without verification
+    - Search documentation, test alternative approaches
+    - Provide evidence (errors, docs links) if something is impossible
+    - Say "I may be wrong - let me verify" rather than claiming impossibility
+
+32. For long-running pipelines: Isolate temporary directories
+    - Never use system /tmp (limited space, causes failures)
+    - Use project-specific temp directories with ample space
+    - Preserve work/cache directories until analysis complete for resume capability
+
+33. **CONTAINER-ONLY RULE - ABSOLUTELY NO EXCEPTIONS**
+    - NEVER install ANY software outside the container
+    - NEVER use pip install --user
+    - NEVER use conda/mamba outside container
+    - NEVER suggest workarounds that break reproducibility
+    - If a package is missing: UPDATE DOCKERFILE AND REBUILD
+    - The container IS the experiment - everything must be inside it
+    - Use flags: --cleanenv --no-home to ensure isolation
+    - **NEVER use HPC system Python directly** - ALWAYS use singularity exec
+    - **NEVER run python scripts without the container** - this fills up home quota (20GB limit)
+    - ALL Python/R scripts must be run with: singularity exec albopictus-diapause-rnaseq.sif python script.py
+
 ## Failure to Follow Rules
 
 - Repository contamination with AI attribution will require complete repository recreation

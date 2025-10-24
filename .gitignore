@@ -21,27 +21,8 @@ data/processed/*.sam
 *.zip
 
 # Reference files (large) - will be available on Zenodo
-data/references/*.fa
-data/references/*.fasta
-data/references/*.fasta.gz
-data/references/*.fa.gz
-data/references/*.gtf
-data/references/*.gtf.gz
-data/references/*.gff
-data/references/*.gff.gz
-data/references/*.gff3
-data/references/*.fai
-data/references/*.gzi
-data/references/salmon_index/
-data/references/kallisto_index/
-data/references/bowtie2_index/
-data/references/star_index/
-
-# Raw downloads from GenBank/NCBI/Dryad (keep cleaned versions only)
-data/references/AalbF3_genome/raw_downloads/
-data/references/dryad_download/
-data/references/previously_used/
-data/references/**/*.pdf
+# Ignore ALL reference data - too large for git
+data/references/
 
 # Manuscripts and reference text files (only in metadata)
 # Keep important documentation and analysis files
@@ -59,9 +40,13 @@ output/quantification/*.sf
 output/quantification/*.tsv
 output/qc/*.zip
 output/qc/*.html
-logs/*.log
-logs/*.out
-logs/*.err
+# All log files - we don't need these in the repo
+logs/
+*.log
+*.out
+*.err
+*.e.txt
+*.o.txt
 results/
 output/
 test_output/
@@ -147,6 +132,7 @@ output/nf-temp/
 singularity/
 singularity_temp_cache/
 *.sif
+*.sif.*
 *.img
 *.sqsh
 
@@ -156,12 +142,8 @@ cache/
 tmp/
 temp/
 
-# SLURM output files
-*.o.txt
+# SLURM and other temporary files
 *.ERROR.txt
-logs/*.o.txt
-logs/*.ERROR.txt
-logs/samplesheets/
 samplesheet_*.csv
 
 # HPC-specific configuration (contains local paths)
@@ -170,6 +152,10 @@ hpc_config.sh
 
 # Collaborator repositories (cloned for reference)
 data/collaborator_repos/
+
+# Reviewer comments and manuscript revisions (confidential)
+data/collaborator_repos/revisions_*.txt
+**/revisions_cosme_et_al_*.txt
 
 # Git hook documentation (system-specific)
 git-hook-setup.md
@@ -215,3 +201,6 @@ scripts/03_qc_analysis/README.md
 
 # Keep documentation
 !docs/
+
+# Archived documentation (old session summaries)
+archived_docs/

@@ -153,7 +153,8 @@ RUN pip3 install --no-cache-dir \
 
 # Install remaining R packages from CRAN (packages not available in conda-forge/bioconda)
 # Note: pheatmap, reshape2, viridis already installed via conda above
-RUN R -e "install.packages(c('here', 'data.table', 'metafor', 'tidyverse', 'ggplot2', 'qqman', 'qqplotr', 'reticulate', 'broom', 'readxl', 'writexl', 'knitr', 'rmarkdown', 'GOplot'), repos='https://cloud.r-project.org/', Ncpus=4)"
+# rdryad: For programmatic access to Dryad data repository
+RUN R -e "install.packages(c('here', 'data.table', 'metafor', 'tidyverse', 'ggplot2', 'qqman', 'qqplotr', 'reticulate', 'broom', 'readxl', 'writexl', 'knitr', 'rmarkdown', 'GOplot', 'rdryad'), repos='https://cloud.r-project.org/', Ncpus=4)"
 
 # Install and configure shell environment in a single layer
 RUN git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh && \

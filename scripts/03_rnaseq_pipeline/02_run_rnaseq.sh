@@ -6,8 +6,9 @@
 #SBATCH --partition=epyc
 #SBATCH -o /bigdata/cosmelab/lcosme/projects/albopictus-diapause-rnaseq/logs/rnaseq_main_%j.o.txt
 #SBATCH -e /bigdata/cosmelab/lcosme/projects/albopictus-diapause-rnaseq/logs/rnaseq_main_%j.e.txt
-#SBATCH --mail-type=END,FAIL
-#SBATCH --mail-user=lcosme@ucr.edu
+# Email notifications disabled
+# #SBATCH --mail-type=END,FAIL
+# #SBATCH --mail-user=lcosme@ucr.edu
 
 #############################################################################
 # nf-core/rnaseq Pipeline - Production-Ready Launcher
@@ -46,7 +47,7 @@ PROJECT_BASE="/bigdata/cosmelab/lcosme/projects/albopictus-diapause-rnaseq"
 # Pipeline version pinning
 PIPE_VER="3.19.0"
 PIPE_VER_CLEAN="3_19_0"  # For run name (no periods allowed)
-RUN_NAME="albopictus_diapause_rnaseq_${PIPE_VER_CLEAN}_$(date +%Y%m%d)"
+RUN_NAME="albopictus_diapause_rnaseq_${PIPE_VER_CLEAN}_$(date +%Y%m%d_%H%M%S)"
 
 # Validation mode (set VALIDATE_ONLY=1 to check params without running)
 VALIDATE_ONLY="${VALIDATE_ONLY:-0}"

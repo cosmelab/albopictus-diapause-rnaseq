@@ -2,6 +2,26 @@
 
 This file consolidates all technical setup documentation for the albopictus-diapause-rnaseq project.
 
+## ⚠️ CRITICAL: CONTAINER-ONLY POLICY
+
+**ALL SOFTWARE MUST BE IN THE CONTAINER - NO EXCEPTIONS**
+
+This project uses containerization for complete reproducibility. NEVER:
+- Install packages with pip install --user
+- Use conda/mamba outside the container
+- Install ANY software on the HPC
+- Create Python virtual environments
+- Use system Python or R
+
+If software is missing:
+1. Add to Dockerfile
+2. Push to GitHub
+3. GitHub Actions builds new Docker image
+4. Pull new .sif from Docker Hub
+5. Use ONLY the container for ALL operations
+
+**Violation breaks reproducibility and wastes limited home quota (30GB)**
+
 ---
 
 ## Table of Contents

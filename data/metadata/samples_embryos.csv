@@ -1,0 +1,13 @@
+BioProject,Run,Stage exposed,Exposure duration,Photoperiod,Temperature (oC),Sample collection,Replicate,Description,Original publication abbreviation,Condition,Plattaform,Read length,Publication,New abreviation,Sample
+PRJNA158021,SRR458462,Adult,pupa to egg laying,8L:16D,21,embryos,1, 72-78h post-oviposition,DI_72h,diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",SD_72h,PRJNA158021_SRR458462
+PRJNA158021,SRR458463,Adult,pupa to egg laying,8L:16D,21,embryos,1, 135-141h post-oviposition,DI_135h,diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",SD_135h,PRJNA158021_SRR458463
+PRJNA158021,SRR458464,Adult,pupa to egg laying,16L:8D,21,embryos,1, 72-78h post-oviposition,NDI_72h,non-diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",LD_72h,PRJNA158021_SRR458464
+PRJNA158021,SRR458465,Adult,pupa to egg laying,16L:8D,21,embryos,1, 135-141h post-oviposition,NDI_135h,non-diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",LD_135h,PRJNA158021_SRR458465
+PRJNA158021,SRR458466,Adult,pupa to egg laying,8L:16D,21,embryos,2, 72-78h post-oviposition,DI_72h,diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",SD_72h,PRJNA158021_SRR458466
+PRJNA158021,SRR458467,Adult,pupa to egg laying,8L:16D,21,embryos,2, 135-141h post-oviposition,DI_135h,diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",SD_135h,PRJNA158021_SRR458467
+PRJNA158021,SRR458468,Adult,pupa to egg laying,16L:8D,21,embryos,2, 72-78h post-oviposition,NDI_72h,non-diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",LD_72h,PRJNA158021_SRR458468
+PRJNA158021,SRR458469,Adult,pupa to egg laying,16L:8D,21,embryos,2, 135-141h post-oviposition,NDI_135h,non-diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",LD_135h,PRJNA158021_SRR458469
+PRJNA158021,SRR458470,Adult,pupa to egg laying,8L:16D,21,embryos,3, 72-78h post-oviposition,DI_72h,diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",SD_72h,PRJNA158021_SRR458470
+PRJNA158021,SRR458471,Adult,pupa to egg laying,8L:16D,21,embryos,3, 135-141h post-oviposition,DI_135h,diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",SD_135h,PRJNA158021_SRR458471
+PRJNA158021,SRR458472,Adult,pupa to egg laying,16L:8D,21,embryos,3, 72-78h post-oviposition,NDI_72h,non-diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",LD_72h,PRJNA158021_SRR458472
+PRJNA158021,SRR458473,Adult,pupa to egg laying,16L:8D,21,embryos,3, 135-141h post-oviposition,NDI_135h,non-diapause-inducing,Illumina HiSeq,"Paired-end, 100bp","Poelchau et al, 2013a",LD_135h,PRJNA158021_SRR458473

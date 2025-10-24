@@ -119,8 +119,9 @@ We have 3 experiments. We ran nf-core/rnaseq and got:
   2. R packages from conda (pheatmap, reshape2, viridis)
   3. Bioconductor packages
   4. CRAN packages (remaining)
-- ⏳ NEED TO REBUILD container before running analyses
-- 📝 User needs to update GitHub secrets to trigger build
+- ✅ Pushed to GitHub (commit eda94db)
+- 🔄 **Container build TRIGGERED** - check GitHub Actions
+- ⏳ Once build completes: `singularity pull albopictus-diapause-rnaseq.sif docker://ghcr.io/cosmelab/albopictus-diapause-rnaseq:latest`
 
 **Adults (scripts/06_differential_expression/):**
 - ✅ 01_adults_deseq2_unfed.R - UPDATED to match Angela's methods exactly
@@ -135,6 +136,23 @@ We have 3 experiments. We ran nf-core/rnaseq and got:
 
 **Embryos:** Not created yet (need 72h and 135h separate analyses)
 **Larvae:** Not created yet (need 11d, 21d, 40d separate analyses)
+
+### PIPELINE RE-RUN STATUS (Oct 23, 2025)
+
+**THE ACTUAL PROBLEM (VERIFIED):**
+- Oct 18 run used: `-g gene_biotype` in featureCounts
+- This groups ALL genes by biotype instead of counting individual genes
+- Result: ~10 biotype categories instead of 22,176 individual gene counts
+- **PROOF:** `/bigdata/.../output/nf-work/00/bf2f02386ad32b8f20d50a6737507b/.command.sh` line 3
+
+**Job Running:** 20644924 (started 18:05)
+- **FIXED PARAMETER:** `featurecounts_group_type: gene_id` in params.yaml
+- **References:** Using same files that worked Oct 18
+  - FASTA: data/references/AalbF3/AalbF3_genome.fa.gz
+  - GTF: data/references/AalbF3/AalbF3_annotation.gtf.gz
+  - rRNA: data/references/AalbF3/combined_rRNA_sequences.fa
+- **STATUS:** Pipeline starting with -resume (will reuse trimmed reads and alignments)
+- **Expected completion:** ~48-72 hours
 
 ### IMMEDIATE NEXT STEPS (Step 1: Replicate Collaborators)
 
@@ -162,6 +180,60 @@ We have 3 experiments. We ran nf-core/rnaseq and got:
 - Systematically answer each Molecular Ecology reviewer question
 - Provide statistical justification for all analyses
 - Document reproducible workflow
+
+---
+
+## SCRIPTS INVENTORY & CLEANUP PLAN
+
+### Scripts Status by Directory:
+
+**00_reference_preparation/** ✅ DONE (3 scripts)
+- 01_strip_chr_prefix.sh, 02_download_rrna_sequences.sh, 03_clean_rrna_headers.sh
+
+**01_data_acquisition/** ⏭️ OBSOLETE - FILES ALREADY EXIST
+- download_dryad_genome.py - TESTED: Gets 403 Forbidden error
+- process_dryad_genome.sh - Never run
+- Files manually downloaded to: data/references/dryad_download/doi_10_5061_dryad_mgqnk98z4__v20210127/
+
+**01_sra_download/** ✅ DONE (3 scripts)
+- Downloaded all 44 SRA samples
+
+**02_annotation_prep/** ❌ DELETE - duplicate of 02_annotation_preprocessing/
+
+**02_annotation_preprocessing/** ✅ DONE (2 scripts)
+- Converted GFF3 to GTF, fixed transcript issues
+
+**03_rnaseq_pipeline/** 🔄 RUNNING
+- Job 20644937 running with corrected featureCounts parameter
+
+**04_qc_analysis/** ⚠️ NEEDS CLEANUP - 14 scripts, only 3 needed
+- KEEP: 08_split_counts_by_stage.py, 09_split_counts_with_metadata.py, 10_create_pca_plots.R
+- DELETE: 01-07, 11-14 (obsolete/duplicates)
+
+**05_batch_correction/** ❌ DELETE ENTIRE DIRECTORY
+- Decision: NO batch correction (Platform = Stage = confounded)
+
+**05_count_matrix/** ⏳ PENDING (2 scripts) - RENAME to 04b_count_matrix/
+
+**06_differential_expression/** ⏳ MAIN - needs completion
+- Have: adults unfed/fed scripts
+- Need: embryos (72h, 135h), larvae (11d, 21d, 40d)
+
+**06_diff_expression/** ❌ DELETE - superseded by R DESeq2 approach
+
+**07_visualization/** ⏳ PENDING
+
+**09_method_validation/** ✅ DONE
+
+### Cleanup Commands (run after pipeline completes):
+```bash
+rm -rf scripts/01_data_acquisition/
+rm -rf scripts/02_annotation_prep/
+rm -rf scripts/05_batch_correction/
+rm -rf scripts/06_diff_expression/
+mv scripts/05_count_matrix scripts/04b_count_matrix
+# Clean 04_qc_analysis - keep only 08, 09, 10
+```
 
 ---
 
@@ -195,8 +267,10 @@ We have 3 experiments. We ran nf-core/rnaseq and got:
 - Collaborators use: FDR < 0.05 AND |log2FC| > 0.5
 - We currently use: FDR < 0.05 only
 
-### Container Rule
+### Container Rule - CRITICAL
 - NEVER install outside container
+- **NEVER use HPC system Python directly** - home quota is only 20GB!
+- **ALL scripts must run with:** singularity exec albopictus-diapause-rnaseq.sif python/Rscript
 - pheatmap missing? Use base R or update Dockerfile
 
 ---
@@ -232,13 +306,53 @@ Before doing ANYTHING:
 
 ---
 
-## Current Todo List
+## CRITICAL ISSUE FOUND (Oct 23, 2025)
 
-1. [ ] Fix pheatmap in 01_adults_deseq2_unfed.R
-2. [ ] Resubmit adults unfed job
-3. [ ] Create batch script for adults fed
-4. [ ] Submit adults fed job
-5. [ ] Create embryos script
-6. [ ] Create larvae script
-7. [ ] Extract GWAS candidates
-8. [ ] Fisher's enrichment test
+### THE PROBLEM:
+1. **Wrong GTF used**: Only protein-coding genes (15,542), missing:
+   - 153 rRNA genes (can't measure contamination!)
+   - 3,894 lncRNA genes (8 are GWAS candidates!)
+   - 869 tRNA genes
+
+2. **Wrong featureCounts parameter**: Used `-g gene_biotype` instead of `-g gene_id`
+   - Result: Collapsed all genes into ~10 biotype categories
+   - We need: Individual counts for 20,621 genes
+
+### WHAT WAS FIXED:
+1. ✅ Created complete GTF: `/data/references/AalbF3/AalbF3_all_gene_types.gtf`
+2. ✅ Updated `scripts/03_rnaseq_pipeline/params.yaml`:
+   - Points to complete GTF
+   - Added `featurecounts_group_type: gene_id`
+3. ✅ Cleaned up references (one directory: `/data/references/AalbF3/`)
+
+### IMMEDIATE TODO (IN ORDER):
+
+1. [ ] **Re-run nf-core pipeline with fixed params**
+   ```bash
+   cd /bigdata/cosmelab/lcosme/projects/albopictus-diapause-rnaseq
+   sbatch scripts/03_rnaseq_pipeline/02_run_rnaseq.sh
+   ```
+   - Will take ~72 hours
+   - Will generate proper counts for ALL 20,621 genes
+
+2. [ ] **After pipeline completes, verify outputs:**
+   - Check featureCounts has gene-level counts (not biotypes)
+   - Check Salmon counts include all genes
+   - Verify rRNA contamination metrics are calculated
+
+3. [ ] **Create count matrices for DESeq2:**
+   - Split by stage (adults, embryos, larvae)
+   - Ensure integer counts
+   - Match sample names to metadata
+
+4. [ ] **Replicate collaborator analyses (Step 1)**
+   - Adults: Split by blood meal status
+   - Embryos: Split by timepoint (72h, 135h)
+   - Larvae: Split by timepoint (11d, 21d, 40d)
+   - Use their exact DESeq2 parameters
+
+5. [ ] **Run proper statistical models (Step 2)**
+   - Account for all variables
+   - Compare HTSeq vs Salmon
+
+6. [ ] **Address reviewer concerns (Step 3)**
