@@ -38,3 +38,14 @@ hpc_config.sh
 
 # Results (will be generated)
 results/
+
+# Manuscripts - PDFs and auto-generated txt (copyright protected)
+data/manuscripts/*.pdf
+data/manuscripts/*.txt
+
+# Tracking system (project-specific, not for container)
+tracking/
+
+# Empty cache directories
+checkpoints/
+containers/

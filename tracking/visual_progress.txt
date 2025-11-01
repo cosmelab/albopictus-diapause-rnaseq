@@ -1,0 +1,71 @@
+================================================================================
+ALBOPICTUS DIAPAUSE RNA-SEQ PROGRESS DASHBOARD
+================================================================================
+Generated: 2025-10-31 17:56
+Overall Progress: 15%
+================================================================================
+
+📋 THE ANALYSIS STRATEGY (3 PARTS):
+--------------------------------------------------------------------------------
+PART 1: REPLICATE COLLABORATORS (featureCounts)
+        → Validate pipeline on new AalbF3 genome
+        → Use collaborator's exact DESeq2 scripts
+
+PART 1.5: VALIDATE SALMON VS FEATURECOUNTS
+        → Must prove r > 0.95 correlation
+        → If fails: stop, do not proceed to Part 2
+
+PART 2: REVIEWER REQUIREMENTS (Salmon - only after validation)
+        → Genome-wide statistics
+        → Fisher's exact test for GWAS enrichment
+
+PART 3: GWAS CANDIDATES (last)
+        → Extract candidate expression
+        → Only after Parts 1 & 2 complete
+
+🎯 CURRENT TASK:
+--------------------------------------------------------------------------------
+➡️  Delete or archive duplicate results directories
+    ID: delete_duplicate_dirs
+    ⚠️  Note: qc_analysis, qc_figures, qc_metrics, count_matrices_corrected, featurecounts_genelevel, 07_method_comparison
+    ✅ Mark complete: python tracking/00_track.py complete delete_duplicate_dirs
+
+📊 PHASE PROGRESS:
+--------------------------------------------------------------------------------
+✅ Phase 0: Initial Setup (Container + Refe [██████████████████████████████] 4/4
+✅ Phase 1: Verify Pipeline Outputs         [██████████████████████████████] 3/3
+🔄 Phase 2: Reorganize Results Directory St [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0/5
+    🔄 Delete or archive duplicate results directories
+⏳ Phase 3: Validate Salmon vs featureCount [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0/5
+⏳ Phase 4: Adults Analysis (PART 1 - featu [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0/3
+⏳ Phase 5: Embryos Analysis (PART 1 - feat [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0/4
+⏳ Phase 6: Larvae Analysis (PART 1 - featu [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0/3
+⏳ Phase 7: Clustering & Expression Pattern [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0/4
+⏳ Phase 8: Time Series Analysis            [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0/3
+⏳ Phase 9: Meta-Analysis Across Stages     [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0/4
+⏳ Phase 10: Reviewer Requirements (PART 2  [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0/7
+⏳ Phase 11: GWAS Candidate Analysis (PART  [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0/4
+⏳ Phase 12: Snakemake Workflow Automation  [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0/3
+
+🎓 REVIEWER REQUIREMENTS:
+--------------------------------------------------------------------------------
+Reviewer 2 (CRITICAL):
+  • Genome-wide stats: pending
+  • Fisher's exact test: pending
+
+Reviewer 3 (CRITICAL):
+  • Sample table: pending
+  • DESeq2 design explanation: pending
+  • Stage-specific expression: pending
+  • Mapping statistics: pending
+
+📁 KEY FILES:
+--------------------------------------------------------------------------------
+• Pipeline output: output/star_salmon/featurecounts/*.tsv (22,177 genes)
+• Container: albopictus-diapause-rnaseq.sif (1.5GB, has all packages)
+• Tracking: tracking/00_track.py + tracking/project_state.json
+• Project info: tracking/project_summary.md
+
+================================================================================
+NEXT STEP: Run 'tracking/00_track.py next' to see current task
+================================================================================

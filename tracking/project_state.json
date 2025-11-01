@@ -1,0 +1,501 @@
+{
+  "project": "albopictus-diapause-rnaseq",
+  "last_updated": "2025-10-31T10:45:29",
+  "current_phase": "phase2_organize_matrices",
+  "overall_progress": 15,
+  "blocking_issues": [],
+  "reviewer_requirements": {
+    "reviewer2_critical": {
+      "genome_wide_stats": "pending",
+      "fishers_exact_test": "pending"
+    },
+    "reviewer3_critical": {
+      "sample_table": "pending",
+      "deseq2_design_explanation": "pending",
+      "stage_specific_expression": "pending",
+      "mapping_statistics": "pending"
+    }
+  },
+  "phases": {
+    "phase0_setup": {
+      "name": "Phase 0: Initial Setup (Container + References + Tracking)",
+      "status": "complete",
+      "progress": 100,
+      "description": "Pull container, download reference genome, and setup tracking system",
+      "tasks": [
+        {
+          "id": "pull_container",
+          "name": "Pull container using 00_container/pull_container.sh",
+          "status": "complete"
+        },
+        {
+          "id": "download_reference",
+          "name": "Download reference genome from Dryad (MANUAL BROWSER DOWNLOAD)",
+          "status": "complete",
+          "note": "Dryad blocks automated downloads - browser required"
+        },
+        {
+          "id": "setup_tracking_system",
+          "name": "Setup tracking system (00_track.py + project_state.json + visual_progress.py)",
+          "status": "complete",
+          "script": "tracking/00_track.py",
+          "output_directory": "tracking/"
+        },
+        {
+          "id": "create_tracking_readme",
+          "name": "Create README files for all directories",
+          "status": "complete",
+          "output_directory": "tracking/"
+        }
+      ]
+    },
+    "phase1_verify_pipeline": {
+      "name": "Phase 1: Verify Pipeline Outputs",
+      "status": "complete",
+      "progress": 100,
+      "description": "Pipeline Job 20677337 completed successfully",
+      "tasks": [
+        {
+          "id": "verify_job_complete",
+          "name": "Verify Job 20677337 completed with MultiQC",
+          "status": "complete",
+          "note": "Fixed scratch=false, removed --containall"
+        },
+        {
+          "id": "verify_featurecounts",
+          "name": "Verify featureCounts: 45 samples, 22,177 genes",
+          "status": "complete"
+        },
+        {
+          "id": "verify_salmon",
+          "name": "Verify Salmon: 45 quant.sf files present",
+          "status": "complete"
+        }
+      ]
+    },
+    "phase2_organize_matrices": {
+      "name": "Phase 2: Reorganize Results Directory Structure",
+      "status": "in_progress",
+      "progress": 0,
+      "description": "Clean up duplicate directories and create new organized structure",
+      "tasks": [
+        {
+          "id": "delete_duplicate_dirs",
+          "name": "Delete or archive duplicate results directories",
+          "status": "pending",
+          "note": "qc_analysis, qc_figures, qc_metrics, count_matrices_corrected, featurecounts_genelevel, 07_method_comparison"
+        },
+        {
+          "id": "create_new_structure",
+          "name": "Create new results/ directory structure",
+          "status": "pending",
+          "note": "qc/, count_matrices/, differential_expression/, method_validation/, gwas_candidates/, reviewer_tables/"
+        },
+        {
+          "id": "update_scripts_paths",
+          "name": "Update all scripts to use new results/ paths",
+          "status": "pending",
+          "note": "Need to update 06_count_matrix, 07_qc_*, 08_differential_expression scripts"
+        },
+        {
+          "id": "rerun_count_matrix_scripts",
+          "name": "Rerun count matrix organization scripts",
+          "status": "pending",
+          "script": "scripts/06_count_matrix/01_combine_counts.py",
+          "output_directory": "results/count_matrices/"
+        },
+        {
+          "id": "rerun_qc_scripts",
+          "name": "Rerun ALL QC analysis and visualization scripts",
+          "status": "pending",
+          "script": "scripts/07_qc_visualization/",
+          "output_directory": "results/qc/"
+        }
+      ]
+    },
+    "phase3_validate_salmon": {
+      "name": "Phase 3: Validate Salmon vs featureCounts (critical)",
+      "status": "blocked",
+      "progress": 0,
+      "description": "Prove Salmon gives consistent results with featureCounts - blocked until Phase 2.5 QC complete",
+      "tasks": [
+        {
+          "id": "gene_count_correlation",
+          "name": "Calculate Salmon vs featureCounts correlation per sample",
+          "status": "pending",
+          "note": "MUST achieve r > 0.95 for all 45 samples"
+        },
+        {
+          "id": "test_deseq2_both_methods",
+          "name": "Run same DESeq2 analysis with both count types",
+          "status": "pending",
+          "note": "Test on adults_fed dataset"
+        },
+        {
+          "id": "compare_deg_lists",
+          "name": "Compare DEG lists from both methods",
+          "status": "pending",
+          "note": "MUST achieve >90% overlap"
+        },
+        {
+          "id": "effect_size_correlation",
+          "name": "Correlate log2FC between methods",
+          "status": "pending",
+          "note": "MUST achieve r > 0.9"
+        },
+        {
+          "id": "validation_report",
+          "name": "Document validation results",
+          "status": "pending",
+          "note": "STOP here if validation fails"
+        }
+      ]
+    },
+    "phase4_adults_analysis": {
+      "name": "Phase 4: Adults Analysis (PART 1 - featureCounts)",
+      "status": "pending",
+      "progress": 0,
+      "description": "Replicate Huang et al. 2015 - Split by blood meal status",
+      "tasks": [
+        {
+          "id": "adults_unfed_deseq2",
+          "name": "Adults Unfed: SD_Unfed vs LD_Unfed (n=4 vs 4)",
+          "status": "pending",
+          "script": "08_differential_expression/01_adults_unfed_deseq2.R",
+          "note": "Photoperiod effect without reproduction"
+        },
+        {
+          "id": "adults_fed_deseq2",
+          "name": "Adults Fed: SD_Fed vs LD_Fed (n=4 vs 4) - PRIMARY",
+          "status": "pending",
+          "script": "08_differential_expression/02_adults_fed_deseq2.R",
+          "note": "Diapause vs non-diapause oocytes - main comparison"
+        },
+        {
+          "id": "adults_sanity_check",
+          "name": "Sanity check: 100-2000 DEGs, PCA separation, MA plot",
+          "status": "pending"
+        }
+      ]
+    },
+    "phase5_embryos_analysis": {
+      "name": "Phase 5: Embryos Analysis (PART 1 - featureCounts)",
+      "status": "pending",
+      "progress": 0,
+      "description": "Replicate Poelchau et al. 2013a - Split by timepoint",
+      "tasks": [
+        {
+          "id": "embryos_72h_deseq2",
+          "name": "Embryos 72h: SD_72h vs LD_72h (n=3 vs 3)",
+          "status": "pending",
+          "script": "08_differential_expression/03_embryos_72h_deseq2.R",
+          "note": "Early embryonic development"
+        },
+        {
+          "id": "embryos_135h_deseq2",
+          "name": "Embryos 135h: SD_135h vs LD_135h (n=3 vs 3)",
+          "status": "pending",
+          "script": "08_differential_expression/04_embryos_135h_deseq2.R",
+          "note": "Diapause entry timepoint"
+        },
+        {
+          "id": "embryos_interaction",
+          "name": "Embryos Interaction: Photoperiod \u00d7 Time (optional)",
+          "status": "pending",
+          "script": "08_differential_expression/05_embryos_interaction_deseq2.R",
+          "note": "Test if photoperiod effect changes over time"
+        },
+        {
+          "id": "embryos_sanity_check",
+          "name": "Sanity check: Similar DEG counts, some overlap, PCA separation",
+          "status": "pending"
+        }
+      ]
+    },
+    "phase6_larvae_analysis": {
+      "name": "Phase 6: Larvae Analysis (PART 1 - featureCounts)",
+      "status": "pending",
+      "progress": 0,
+      "description": "Replicate Poelchau et al. 2013b - 11d comparison + SD time series",
+      "tasks": [
+        {
+          "id": "larvae_11d_deseq2",
+          "name": "Larvae 11d: SD_11d vs LD_11d (n=3 vs 3) - VALID COMPARISON",
+          "status": "pending",
+          "script": "08_differential_expression/06_larvae_11d_deseq2.R",
+          "note": "Only valid timepoint (LD not degraded)"
+        },
+        {
+          "id": "larvae_sd_timeseries",
+          "name": "Larvae SD Time Series: 11d vs 21d vs 40d (n=9, SD only)",
+          "status": "pending",
+          "script": "08_differential_expression/07_larvae_SD_timeseries_deseq2.R",
+          "note": "Diapause depth progression, pairwise comparisons"
+        },
+        {
+          "id": "larvae_sanity_check",
+          "name": "Sanity check: Gradual changes, metabolic suppression signatures",
+          "status": "pending",
+          "note": "WARNING: Do NOT analyze LD 21d/40d as normal"
+        }
+      ]
+    },
+    "phase7_clustering": {
+      "name": "Phase 7: Clustering & Expression Patterns",
+      "status": "pending",
+      "progress": 0,
+      "description": "Identify universal vs stage-specific diapause genes",
+      "tasks": [
+        {
+          "id": "kmeans_clustering",
+          "name": "K-means clustering of DEGs (k=4-6)",
+          "status": "pending",
+          "script": "09_clustering/01_kmeans_clustering.R"
+        },
+        {
+          "id": "hierarchical_clustering",
+          "name": "Hierarchical clustering with heatmaps",
+          "status": "pending",
+          "script": "09_clustering/02_hierarchical_clustering.R"
+        },
+        {
+          "id": "pattern_identification",
+          "name": "Identify consistent increase/decrease patterns",
+          "status": "pending",
+          "script": "09_clustering/03_pattern_identification.R",
+          "note": "Universal vs stage-specific genes"
+        },
+        {
+          "id": "go_enrichment",
+          "name": "GO enrichment analysis per cluster",
+          "status": "pending",
+          "script": "09_clustering/04_go_enrichment.R"
+        }
+      ]
+    },
+    "phase8_time_series": {
+      "name": "Phase 8: Time Series Analysis",
+      "status": "pending",
+      "progress": 0,
+      "description": "Temporal dynamics in embryos and larvae",
+      "tasks": [
+        {
+          "id": "embryo_timecourse",
+          "name": "Embryo time course: 72h \u2192 135h dynamics",
+          "status": "pending",
+          "script": "10_time_series/01_embryo_timecourse.R",
+          "note": "Diapause programming trajectory"
+        },
+        {
+          "id": "larvae_timecourse",
+          "name": "Larvae time course: 11d \u2192 21d \u2192 40d (SD only)",
+          "status": "pending",
+          "script": "10_time_series/02_larvae_timecourse.R",
+          "note": "Diapause maintenance/deepening"
+        },
+        {
+          "id": "timeseries_sanity_check",
+          "name": "Sanity check: Biologically reasonable trajectories",
+          "status": "pending"
+        }
+      ]
+    },
+    "phase9_meta_analysis": {
+      "name": "Phase 9: Meta-Analysis Across Stages",
+      "status": "pending",
+      "progress": 0,
+      "description": "Combine results across life stages",
+      "tasks": [
+        {
+          "id": "fishers_method",
+          "name": "Fisher's method: Combine p-values",
+          "status": "pending",
+          "script": "11_meta_analysis/01_fishers_method.R"
+        },
+        {
+          "id": "stouffers_method",
+          "name": "Stouffer's Z-score: Weighted by sample size",
+          "status": "pending",
+          "script": "11_meta_analysis/02_stouffers_method.R"
+        },
+        {
+          "id": "effect_size_meta",
+          "name": "Effect size meta-analysis: Combine log2FC",
+          "status": "pending",
+          "script": "11_meta_analysis/03_effect_size_meta.R"
+        },
+        {
+          "id": "cross_stage_summary",
+          "name": "Create universal diapause gene list",
+          "status": "pending",
+          "note": "Genes DE in all 3 stages with consistent direction"
+        }
+      ]
+    },
+    "phase10_reviewer_salmon": {
+      "name": "Phase 10: Reviewer Requirements (PART 2 - Salmon)",
+      "status": "pending",
+      "progress": 0,
+      "description": "Answer reviewer questions with Salmon counts - ONLY IF VALIDATION PASSED",
+      "tasks": [
+        {
+          "id": "genome_wide_stats",
+          "name": "R2.1: Genome-wide DEG counts at multiple thresholds",
+          "status": "pending",
+          "script": "12_reviewer_response/01_genome_wide_stats.R",
+          "reviewer_requirement": "reviewer2_genome_wide_stats"
+        },
+        {
+          "id": "gwas_fishers_test",
+          "name": "R2.2: Fisher's exact test for GWAS enrichment",
+          "status": "pending",
+          "script": "12_reviewer_response/02_gwas_enrichment_test.R",
+          "reviewer_requirement": "reviewer2_fishers_exact_test",
+          "note": "Are 4/5 GWAS candidates DE significant?"
+        },
+        {
+          "id": "sample_info_table",
+          "name": "R3.1: Sample information table (all 45 samples + QC)",
+          "status": "pending",
+          "script": "12_reviewer_response/03_sample_info_table.py",
+          "reviewer_requirement": "reviewer3_sample_table"
+        },
+        {
+          "id": "deseq2_design_writeup",
+          "name": "R3.2: DESeq2 design explanation document",
+          "status": "pending",
+          "reviewer_requirement": "reviewer3_deseq2_design_explanation",
+          "note": "Explain confounding handling, stage-specific analyses"
+        },
+        {
+          "id": "stage_specific_patterns",
+          "name": "R3.3: Stage-specific expression summary",
+          "status": "pending",
+          "script": "12_reviewer_response/04_stage_specific_summary.R",
+          "reviewer_requirement": "reviewer3_stage_specific_expression"
+        },
+        {
+          "id": "mapping_statistics",
+          "name": "R3.4: Extract mapping stats from MultiQC",
+          "status": "pending",
+          "script": "12_reviewer_response/05_extract_mapping_stats.py",
+          "reviewer_requirement": "reviewer3_mapping_statistics"
+        },
+        {
+          "id": "salmon_sanity_check",
+          "name": "Sanity check: Salmon DEGs ~90% match featureCounts",
+          "status": "pending",
+          "note": "Validation from Phase 3 should hold"
+        }
+      ]
+    },
+    "phase11_gwas_candidates": {
+      "name": "Phase 11: GWAS Candidate Analysis (PART 3 - LAST)",
+      "status": "pending",
+      "progress": 0,
+      "description": "Extract and visualize GWAS candidate expression - AFTER user re-does GWAS",
+      "tasks": [
+        {
+          "id": "extract_candidate_expression",
+          "name": "Extract GWAS candidate results from all stages",
+          "status": "pending",
+          "script": "13_gwas_candidates/01_extract_candidate_expression.R",
+          "note": "Wait for user to provide updated candidate list"
+        },
+        {
+          "id": "candidate_heatmap",
+          "name": "Create cross-stage heatmap of candidate expression",
+          "status": "pending",
+          "script": "13_gwas_candidates/02_candidate_heatmap.R"
+        },
+        {
+          "id": "candidate_volcano_plots",
+          "name": "Generate volcano plots with candidates highlighted",
+          "status": "pending",
+          "script": "13_gwas_candidates/03_candidate_volcano_plots.R"
+        },
+        {
+          "id": "candidate_summary_table",
+          "name": "Create candidate summary table across stages",
+          "status": "pending",
+          "script": "13_gwas_candidates/04_candidate_summary_table.R"
+        }
+      ]
+    },
+    "phase12_snakemake": {
+      "name": "Phase 12: Snakemake Workflow Automation",
+      "status": "pending",
+      "progress": 0,
+      "description": "Automate entire analysis with Snakemake",
+      "tasks": [
+        {
+          "id": "create_snakefile",
+          "name": "Create Snakefile for full workflow",
+          "status": "pending"
+        },
+        {
+          "id": "test_dryrun",
+          "name": "Test with snakemake --dry-run",
+          "status": "pending"
+        },
+        {
+          "id": "document_snakemake",
+          "name": "Document Snakemake usage in README",
+          "status": "pending"
+        }
+      ]
+    },
+    "phase13_manuscript_container": {
+      "name": "Phase 13: Manuscript-Only Container",
+      "status": "pending",
+      "progress": 0,
+      "description": "Create minimal container for reproducing manuscript figures and tables only",
+      "tasks": [
+        {
+          "id": "design_manuscript_container",
+          "name": "Design minimal container architecture (Docker)",
+          "status": "pending",
+          "note": "Target <500MB, only visualization dependencies, no pipeline tools"
+        },
+        {
+          "id": "create_dockerfile",
+          "name": "Create Dockerfile for manuscript container",
+          "status": "pending",
+          "script": "containers/Dockerfile.manuscript",
+          "note": "R + ggplot2 + Python + pandas, minimal image"
+        },
+        {
+          "id": "extract_final_scripts",
+          "name": "Extract only figure/table generation scripts",
+          "status": "pending",
+          "note": "10-15 scripts for final outputs only"
+        },
+        {
+          "id": "create_master_reproduction_script",
+          "name": "Create master script to regenerate all manuscript outputs",
+          "status": "pending",
+          "script": "reproduce_manuscript.sh",
+          "note": "One command to reproduce all figures and tables"
+        },
+        {
+          "id": "prepare_input_data_archive",
+          "name": "Prepare processed data archive for Zenodo",
+          "status": "pending",
+          "note": "DESeq2 results, count matrices, metadata - no raw reads"
+        },
+        {
+          "id": "test_manuscript_container",
+          "name": "Test container reproduces exact manuscript outputs",
+          "status": "pending",
+          "note": "Validate outputs match published figures/tables"
+        },
+        {
+          "id": "deploy_container",
+          "name": "Deploy to DockerHub and archive on Zenodo",
+          "status": "pending",
+          "note": "Public availability for reviewers and readers"
+        }
+      ]
+    }
+  }
+}

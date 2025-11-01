@@ -56,9 +56,23 @@ Read this file first before any action.
 21. Never create documentation files (.md) unless specifically asked
 22. Keep responses concise and to the point
 23. Only use emojis if explicitly requested
-24. DO NOT USE CAPS for .md filenames - use lowercase only (except for README.md)
-25. NEVER create directories and leave them empty
-26. Before creating any directory, ensure it will be immediately populated with files
+24. Use lowercase for .md filenames (except README.md)
+25. When consolidating files:
+    - Read entire files completely before archiving or merging
+    - Extract all critical information (biological context, methods, analysis plans)
+    - Merge content into target files before archiving source files
+    - Never archive files without first consolidating their essential content
+    - If unsure what is essential, ask before archiving
+25. Directory creation rule - no exceptions:
+    - Never create directories ahead of time "for organization"
+    - Only create a directory when you have a file to put in it right now
+    - If a script creates output, let the script create its own output directory with mkdir -p
+    - Never pre-create empty directory structures
+    - Empty directories waste time and cause confusion
+26. Follow the directory structure that exists:
+    - Check what directories already exist before creating new ones
+    - Use existing output directories, don't create duplicates
+    - If uncertain where output goes, check similar existing files first
 
 ## Git/Repository Specific
 
@@ -79,21 +93,71 @@ Read this file first before any action.
     - Use project-specific temp directories with ample space
     - Preserve work/cache directories until analysis complete for resume capability
 
-33. **CONTAINER-ONLY RULE - ABSOLUTELY NO EXCEPTIONS**
-    - NEVER install ANY software outside the container
-    - NEVER use pip install --user
-    - NEVER use conda/mamba outside container
-    - NEVER suggest workarounds that break reproducibility
-    - If a package is missing: UPDATE DOCKERFILE AND REBUILD
-    - The container IS the experiment - everything must be inside it
-    - Use flags: --cleanenv --no-home to ensure isolation
-    - **NEVER use HPC system Python directly** - ALWAYS use singularity exec
-    - **NEVER run python scripts without the container** - this fills up home quota (20GB limit)
-    - ALL Python/R scripts must be run with: singularity exec albopictus-diapause-rnaseq.sif python script.py
+33. SLURM batch script requirements - no exceptions:
+    - Always use .o.txt for stdout: `#SBATCH -o logs/jobname_%j.o.txt`
+    - Always use .e.txt for stderr: `#SBATCH -e logs/jobname_%j.e.txt`
+    - Never use .out or .err extensions (cannot open in text editor)
+    - This applies to all SLURM batch scripts without exception
+
+34. Container-only rule - no exceptions:
+    - Mandatory start to every session:
+      ```bash
+      module load singularity
+      singularity exec --cleanenv --bind $PWD:/proj albopictus-diapause-rnaseq.sif bash -c "cd /proj && <command>"
+      ```
+    - Always load singularity module first - never assume it's loaded
+    - Always use the container for everything - Python, R, bash scripts, all commands
+    - Container location: `/bigdata/cosmelab/lcosme/projects/albopictus-diapause-rnaseq/albopictus-diapause-rnaseq.sif`
+    - Never install any software outside the container
+    - Never use pip install --user
+    - Never use conda/mamba outside container
+    - Never use HPC system Python/R directly
+    - Never run python/R scripts without the container - this fills up home quota (20GB limit)
+    - Never suggest workarounds that break reproducibility
+    - If a package is missing: update Dockerfile and rebuild
+    - The container is the experiment - everything must be inside it
+    - Use flags: --cleanenv --bind $PWD:/proj for isolation and mounting
+    - All commands must use: `module load singularity && singularity exec --cleanenv --bind $PWD:/proj albopictus-diapause-rnaseq.sif bash -c "cd /proj && <command>"`
+
+## Project State Tracking - MANDATORY
+
+35. Always use project_state.json tracking system - no exceptions:
+    - Before starting any task: Run `./00_track.py status` to see current task
+    - After completing any task: Run `./00_track.py complete <task_id>` to mark it done
+    - Never work on tasks without checking project_state.json first
+    - Never complete a task without updating project_state.json
+    - If you forget to update: stop and update it immediately before continuing
+    - The tracking system is the single source of truth - not .md files
+
+36. **When starting a new session:**
+    - Step 1: Run `./00_track.py status` to see where we are
+    - Step 2: Run `./00_track.py next` to see next task
+    - Step 3: Work on that task ONLY
+    - Step 4: Mark it complete when done: `./00_track.py complete <task_id>`
+    - Step 5: Repeat from Step 2
+
+37. Always create numbered scripts and document them - no exceptions:
+    - For every task that involves running commands: create a numbered script
+    - Add the script to scripts/README.md in the appropriate section
+    - Include: when to run it, what it does, what output it produces
+    - Never just run commands interactively without creating a replicable script
+    - Scripts must be numbered in execution order within their directory
+
+38. **TodoWrite integration:**
+    - Sync TodoWrite with current phase tasks from project_state.json
+    - Keep TodoWrite to 5-7 immediate tasks only
+    - When TodoWrite task completes, also update project_state.json
+
+39. **Documentation updates:**
+    - Update session_tracking.md ONLY at end of major session
+    - Update scripts/README.md when creating new scripts
+    - Project_state.json is authoritative - session_tracking.md is summary
+    - NEVER rely on .md files for tracking current work
 
 ## Failure to Follow Rules
 
 - Repository contamination with AI attribution will require complete repository recreation
+- **Failure to update project_state.json breaks continuity** - you will forget what was done
 - Always prioritize following these rules over completing tasks
 - When in doubt, ask for clarification rather than proceeding
 

@@ -24,16 +24,16 @@ data/processed/*.sam
 # Ignore ALL reference data - too large for git
 data/references/
 
-# Manuscripts and reference text files (only in metadata)
+# Manuscripts - exclude PDFs (copyright) and auto-generated txt files
+# Keep .md summaries which contain extracted key information
+data/manuscripts/*.pdf
+data/manuscripts/*.txt
+!data/manuscripts/*.md
+
 # Keep important documentation and analysis files
 !README.md
 !*.md
 !*.Rmd
-
-# Large manuscript files in metadata (exclude)
-data/metadata/Huang_et_al_2015.txt
-data/metadata/Poelchau_et_al_2013*.txt
-data/metadata/*.pdf
 
 # Analysis outputs (keep summaries but not large files)
 output/quantification/*.sf
@@ -141,6 +141,8 @@ cache/
 .cache/
 tmp/
 temp/
+checkpoints/
+containers/
 
 # SLURM and other temporary files
 *.ERROR.txt
